@@ -1,0 +1,22 @@
+server:
+  port: 8001
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/test
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  activiti:
+    check-process-definitions: false
+    process-definition-location-prefix: classpath:/processes/
+    database-schema-update: true
+    #不生成流程图png
+    createDiagramOnDeploy: false
+    #异步启动
+    async-executor-activate: true
+
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
