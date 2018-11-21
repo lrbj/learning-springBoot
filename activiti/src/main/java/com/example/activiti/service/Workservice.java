@@ -6,16 +6,30 @@ package com.example.activiti.service;
  * @Date:Created in 1:18 PM 11/19/2018
  */
 public interface Workservice {
-    //部署流程
+    //1、部署流程
     void deploy();
-    //运行流程
+
+    //2、运行流程
     void runProcess();
-    //查询代理人的任务情况
+
+    //3、查询代理人的任务情况
     void queryTask(String assignee);
-    //完成任务
+
+    //4、完成任务
     void complieTask(String taskId);
-    //查看流程的具体定义
+
+    //5、查看流程的具体定义
     void queryProcessDefination(String processDefikey);
 
+    //6、查看流程实例的状态
     void queryProcessInstanceState();
+
+    //7、删除流程定义
+    void deleteProcessDefi(String deploymentId);
+
+    //8、查看历史流程实例信息
+    void queryHistoryProcInst();
+
+    //9、查询流程实例历史执行信息
+    void queryHistoryTask(String processInstanceId);
 }

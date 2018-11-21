@@ -30,7 +30,7 @@ public class testController {
         workservice.runProcess();
     }
 
-    @PostMapping("/query")
+    @GetMapping("/query")
     @ApiOperation(value = "查询任务")
     void queryTask(@RequestParam("assginName")String assginName) {
         workservice.queryTask(assginName);
@@ -42,11 +42,18 @@ public class testController {
         workservice.complieTask(taskId);
     }
 
-    @PostMapping("/queryProcess")
+    @GetMapping("/queryProcess")
     @ApiOperation(value = "查询流程定义")
     void queryProcessDefination(@RequestParam("processDefikey")String  processDefikey){
         workservice.queryProcessDefination(processDefikey);
         workservice.queryProcessInstanceState();
 
     }
+
+    @DeleteMapping("/processDefi")
+    @ApiOperation(value = "删除流程")
+    void deleteProcessDefi(@RequestParam("deploymentId")String deploymentId){
+        workservice.deleteProcessDefi(deploymentId);
+    }
+
 }

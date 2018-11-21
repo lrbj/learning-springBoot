@@ -1,9 +1,12 @@
 package com.example.activiti.service.impl;
 
 import com.example.activiti.service.Workservice;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -31,6 +34,10 @@ public class WorkserviceImpl implements Workservice {
 
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    HistoryService historyService;
+
     @Override
     public void deploy() {
 
@@ -103,6 +110,7 @@ public class WorkserviceImpl implements Workservice {
                 .list();
         if(!processInstanceList.isEmpty()){
             for(ProcessInstance processInstance: processInstanceList){
+                System.out.println("当前正在运行的流程实例");
                 System.out.println("该实例id："+processInstance.getProcessInstanceId());
                 System.out.println("该实例名字："+processInstance.getName());
                 System.out.println("该实例对象id:"+processInstance.getId());
@@ -112,4 +120,41 @@ public class WorkserviceImpl implements Workservice {
             System.out.println("当前无流程实例");
         }
     }
+
+    @Override
+    public void deleteProcessDefi(String deploymentId) {
+       repositoryService.deleteDeployment(deploymentId);
+    }
+
+    @Override
+    public void queryHistoryProcInst() {
+        List<HistoricProcessInstance> list = historyService
+                .createHistoricProcessInstanceQuery()
+                .list();
+        if(!list.isEmpty()){
+            for(HistoricProcessInstance temp:list){
+                System.out.println("历史流程实例id:" + temp.getId());
+                System.out.println("历史流程定义的id:"+ temp.getProcessDefinitionId());
+                System.out.println("历史流程实例开始时间--结束时间:"+ temp.getStartTime() + "-->"+ temp.getEndTime());
+            }
+        }
+
+    }
+
+    @Override
+    public void queryHistoryTask(String processInstanceId) {
+        List<HistoricTaskInstance> taskInstanceList = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .list();
+        if(!taskInstanceList.isEmpty()){
+            for(HistoricTaskInstance historicTaskInstance:taskInstanceList){
+                System.out.println("历史流程实例任务id:"+ historicTaskInstance.getId());
+                System.out.println("历史流程定义的id:"+ historicTaskInstance.getProcessDefinitionId());
+                System.out.println("历史流程实例任务名称：" +historicTaskInstance.getName());
+                System.out.println("历史流程实例任务处理人："+historicTaskInstance.getAssignee());
+            }
+        }
+    }
+
+
 }
