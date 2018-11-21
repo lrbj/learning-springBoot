@@ -57,6 +57,7 @@ spring:
 *  ACT_HI_*: 'HI'表示history。 这些表包含历史数据，比如历史流程实例， 变量，任务等等。
 *  ACT_GE_*: 通用数据， 用于不同场景下，如存放资源文件。
 ## 5、备注
+### 5.1关于版本问题
 如果使用的是activiti6.0 ，而springboot为2.0及以上，则application文件上需要添加
 ```Java
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
@@ -78,4 +79,20 @@ public class ActivitiApplication {
     }
 }
 
+```
+### 5.2 关于springboot + activiti下启动过程
+当程序启动Spring boot会基于自动配置原理给我们隐式的创建一个工作流引擎对象ProcessEngine，并把RuntimeService（控制流程运行时数据流转）
+等核心服务注册到 Spring 容器中，我们只需要 依赖注入使用即可。在以下代码中体现
+```java
+ @Autowired
+    RepositoryService repositoryService;
+
+    @Autowired
+    RuntimeService runtimeService;
+
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    HistoryService historyService;
 ```
