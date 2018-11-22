@@ -14,7 +14,7 @@ spring:
     createDiagramOnDeploy: false
     #异步启动
     async-executor-activate: true
-
+    history-level: audit
   jpa:
     properties:
       hibernate:

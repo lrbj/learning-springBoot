@@ -1,0 +1,23 @@
+server:
+  port: 8001
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/test
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+    show-sql: true
+    generate-ddl: true
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 10MB
+
