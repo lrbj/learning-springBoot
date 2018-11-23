@@ -1,15 +1,18 @@
 package com.example.fileopera.controller;
 
+import com.example.fileopera.entity.People;
 import com.example.fileopera.service.ExcelOperaService;
 import com.example.fileopera.util.ResponseObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author: Kayla, Ye
@@ -24,12 +27,25 @@ public class ExcelOperaController {
     @Autowired
     ExcelOperaService excelOperaService;
 
+
     @PostMapping("/upload")
     @ApiOperation(value = "上传excel文件")
-    public ResponseObject upLoadDevices(@RequestParam("file") MultipartFile file){
+    public ResponseObject upLoadDevices(@RequestParam("file") MultipartFile file)throws Exception{
 
         excelOperaService.readExcel(file);
 
         return  ResponseObject.success(null);
+    }
+
+    @PostMapping("/generate")
+    @ApiOperation(value = "生成excel文件")
+    public  ResponseObject createExcel(@RequestBody List<People> peopleList) throws IOException {
+        String Filename = "./temp"+ UUID.randomUUID()+".xlsx";
+        List<String> titleList = new ArrayList<>();
+        titleList.add("姓名");
+        titleList.add("电话");
+        titleList.add("住址");
+        excelOperaService.exportDataToExcel(peopleList, titleList ,Filename);
+        return ResponseObject.success(null);
     }
 }
