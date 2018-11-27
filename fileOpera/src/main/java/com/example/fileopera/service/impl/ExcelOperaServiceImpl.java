@@ -1,6 +1,7 @@
 package com.example.fileopera.service.impl;
 
 import com.example.fileopera.constant.ErrorEnum;
+import com.example.fileopera.constant.FileImportAction;
 import com.example.fileopera.entity.People;
 import com.example.fileopera.exception.BusinessException;
 import com.example.fileopera.service.ExcelOperaService;
@@ -23,8 +24,6 @@ import java.util.List;
 @Service
 public class ExcelOperaServiceImpl implements ExcelOperaService {
 
-    private static final String SUFFIX_XLS = ".xls";
-    private static final String SUFFIX_XLSX = ".xlsx";
     //电话正则
     public static final String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[01356789]|18[0-9]|19[89])\\d{8}$";
 
@@ -36,14 +35,14 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
 
         String fileName = file.getOriginalFilename();
         System.out.println("fileName="+fileName);
-        String suffix = SUFFIX_XLSX;
+        String suffix = FileImportAction.SUFFIX_XLSX;
 
         Workbook workbook = null;
         try {
-            if(fileName.endsWith(SUFFIX_XLS)){
+            if(fileName.endsWith(FileImportAction.SUFFIX_XLS)){
               workbook = new HSSFWorkbook(file.getInputStream());
-              suffix = SUFFIX_XLS;
-            }else if(fileName.endsWith(SUFFIX_XLSX)){
+              suffix = FileImportAction.SUFFIX_XLS;
+            }else if(fileName.endsWith(FileImportAction.SUFFIX_XLSX)){
                workbook = new XSSFWorkbook(file.getInputStream());
             }else{
                 throw  new BusinessException(ErrorEnum.PARAM_ERROR.getCode(), "文件为空");
@@ -62,7 +61,7 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
             Row row = sheet.getRow(i);//获取当前行
 
             int cellNum = row.getLastCellNum(); //总的列数
-            if(suffix.equals(SUFFIX_XLS)){
+            if(suffix.equals(FileImportAction.SUFFIX_XLS)){ //不同版本的样式不同
                 cellNum++;
             }
             System.out.println("cellNum=;"+cellNum);
@@ -103,9 +102,9 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
                 }
                 out = new FileOutputStream(exportFile);
                 Workbook workbook = null;
-                if(exportFilePath.endsWith(SUFFIX_XLS)){
+                if(exportFilePath.endsWith(FileImportAction.SUFFIX_XLS)){
                     workbook = new HSSFWorkbook();
-                }else if(exportFilePath.endsWith(SUFFIX_XLSX)){
+                }else if(exportFilePath.endsWith(FileImportAction.SUFFIX_XLSX)){
                     workbook = new XSSFWorkbook();
                 }else{
                     throw  new BusinessException(ErrorEnum.PARAM_ERROR.getCode(), "文件为空");

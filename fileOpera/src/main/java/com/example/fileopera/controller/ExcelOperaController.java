@@ -30,7 +30,7 @@ public class ExcelOperaController {
 
     @PostMapping("/upload")
     @ApiOperation(value = "上传excel文件")
-    public ResponseObject upLoadDevices(@RequestParam("file") MultipartFile file)throws Exception{
+    public ResponseObject upLoadExcel(@RequestParam("file") MultipartFile file)throws Exception{
 
         excelOperaService.readExcel(file);
 
