@@ -66,12 +66,19 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
                 cellNum++;
             }
             System.out.println("cellNum=;"+cellNum);
-            for(int j = 0; j < cellNum; j++){
-                if(!row.getCell(j).getCellType().equals(CellType.STRING)){
-                    row.getCell(j).setCellType(CellType.STRING); //将excel的字符转化成string
+
+             for(int j = 0; j < cellNum; j++){ //按照顺序输出
+          //  for(Cell cell:row){ //输出都是不为空的
+             Cell cell = row.getCell(j);
+                if((CellType.BLANK == cell.getCellType()) || (null == cell) ){ //如果为空则退出
+                    System.out.println("(null == cell) || (CellType.BLANK == cell.getCellType())");
+                    continue;
                 }
-                System.out.printf(row.getCell(j).getCellType()+",");
-                System.out.printf(":cell"+ row.getCell(j).getStringCellValue()+",");
+                if(!cell.getCellType().equals(CellType.STRING)){
+                    cell.setCellType(CellType.STRING); //将excel的字符转化成string
+                }
+                System.out.printf(cell.getCellType()+",");
+                System.out.printf(":cell"+ cell.getStringCellValue()+",");
             }
             System.out.println("");
         }
