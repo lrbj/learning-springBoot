@@ -20,4 +20,6 @@ spring:
     multipart:
       max-request-size: 100MB
       max-file-size: 10MB
-
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false

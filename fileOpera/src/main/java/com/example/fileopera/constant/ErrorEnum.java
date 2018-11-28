@@ -10,7 +10,9 @@ import lombok.Data;
 
 public enum ErrorEnum {
     PARAM_ERROR(1000, "参数错误"),
-    FILEFORMAT_ERROR(1001,"文件格式错误"),;
+    FILEFORMAT_ERROR(1001,"文件格式错误"),
+    FILEEMPTY_ERROR(1002,"文件为空"),
+    ;
 
     private int code;
     private String msg;
