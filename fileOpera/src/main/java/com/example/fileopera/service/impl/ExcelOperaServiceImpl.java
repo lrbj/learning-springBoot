@@ -1,19 +1,22 @@
 package com.example.fileopera.service.impl;
 
 import com.example.fileopera.constant.ErrorEnum;
-import com.example.fileopera.constant.FileImportAction;
-import com.example.fileopera.entity.People;
+import com.example.fileopera.constant.FileConstant;
 import com.example.fileopera.exception.BusinessException;
 import com.example.fileopera.service.ExcelOperaService;
+import com.example.fileopera.util.ExcelData;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -35,14 +38,14 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
 
         String fileName = file.getOriginalFilename();
         System.out.println("fileName="+fileName);
-        String suffix = FileImportAction.SUFFIX_XLSX;
+        String suffix = FileConstant.SUFFIX_XLSX;
 
         Workbook workbook = null;
         try {
-            if(fileName.endsWith(FileImportAction.SUFFIX_XLS)){
+            if(fileName.endsWith(FileConstant.SUFFIX_XLS)){
               workbook = new HSSFWorkbook(file.getInputStream());
-              suffix = FileImportAction.SUFFIX_XLS;
-            }else if(fileName.endsWith(FileImportAction.SUFFIX_XLSX)){
+              suffix = FileConstant.SUFFIX_XLS;
+            }else if(fileName.endsWith(FileConstant.SUFFIX_XLSX)){
                workbook = new XSSFWorkbook(file.getInputStream());
             }else{
                 throw  new BusinessException(ErrorEnum.PARAM_ERROR.getCode(), "文件为空");
@@ -61,7 +64,7 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
             Row row = sheet.getRow(i);//获取当前行
 
             int cellNum = row.getLastCellNum(); //总的列数
-            if(suffix.equals(FileImportAction.SUFFIX_XLS)){ //不同版本的样式不同
+            if(suffix.equals(FileConstant.SUFFIX_XLS)){ //不同版本的样式不同
                 cellNum++;
             }
             System.out.println("cellNum=;"+cellNum);
@@ -90,62 +93,18 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
 
     }
 
+
+    /**
+     *
+     * @param workbook
+     * @param sheet 当前分页
+     * @param titleList 题目
+     * @param rowIndex 当前所在行
+     * @return 下一行所在标志
+     */
     @Override
-    public void exportDataToExcel(List<People> peopleList, List<String> titleList,String exportFilePath) throws BusinessException {
-
-        FileOutputStream out = null;
-        try {
-
-                File exportFile = new File(exportFilePath);
-                if(!exportFile.exists()){
-                    exportFile.createNewFile();
-                }
-                out = new FileOutputStream(exportFile);
-                Workbook workbook = null;
-                if(exportFilePath.endsWith(FileImportAction.SUFFIX_XLS)){
-                    workbook = new HSSFWorkbook();
-                }else if(exportFilePath.endsWith(FileImportAction.SUFFIX_XLSX)){
-                    workbook = new XSSFWorkbook();
-                }else{
-                    throw  new BusinessException(ErrorEnum.PARAM_ERROR.getCode(), "文件为空");
-                }
-
-                Sheet sheet = workbook.createSheet();
-                //设置题目
-                createTitle(workbook,sheet, titleList);
-
-                //填充内容
-
-                int  rowIndex = 1;
-                int clumNum = titleList.size();
-                for(People people: peopleList){
-                    Row row = sheet.createRow(rowIndex);
-                    row.createCell(0).setCellValue(people.getName());
-                    row.createCell(1).setCellValue(people.getPhone());
-                    row.createCell(2).setCellValue(people.getAddress());
-                    rowIndex++;
-                }
-                workbook.write(out);
-                out.flush();
-                workbook.close();
-
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
-
-    @Override
-    public void createTitle(Workbook workbook, Sheet sheet, List<String> titleList) {
-        Row row = sheet.createRow(0);//第一行
+    public int writeTitleToExcel(Workbook workbook, Sheet sheet, List<String> titleList, int rowIndex) {
+        Row row = sheet.createRow(rowIndex);//当前行
         int listNum = titleList.size();
         int i = 0;
         //设置列宽
@@ -166,7 +125,97 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
             cell.setCellValue(titleList.get(i));
             cell.setCellStyle(cellStyle);
         }
+        rowIndex++;
+        return  rowIndex;
     }
+
+    @Override
+    public int writeRowsToExcel(Workbook workbook, Sheet sheet, List<List<Object>> rows, int rowIndex) {
+
+        for(List<Object> rowData: rows){
+           Row row = sheet.createRow(rowIndex);
+           int colunmIndex = 0;
+           for(Object cellData: rowData){
+               Cell cell = row.createCell(colunmIndex);
+               if(cellData != null){
+                   cell.setCellValue(cellData.toString());//默认转化为string 类型
+               }else{
+                   cell.setCellValue("");
+               }
+               colunmIndex++;
+           }
+           rowIndex++;
+        }
+        return rowIndex;
+    }
+
+
+    @Override
+    public int exportDataToExcel(ExcelData data, OutputStream out) {
+        Workbook workbook = getWorkbook(data.getFileName());
+        if(null == workbook ) {
+            return FileConstant.ERR_FILE;
+        }
+
+        int rowIndex = 0;
+        try {
+            Sheet sheet = workbook.createSheet(data.getSheetName());
+            rowIndex = writeTitleToExcel(workbook, sheet,data.getTitle(), rowIndex );
+            rowIndex = writeRowsToExcel(workbook, sheet, data.getRows(), rowIndex);
+            workbook.write(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                workbook.close();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return  rowIndex;
+    }
+
+    @Override
+    public int generateExcel(ExcelData data, String fileDir) throws Exception {
+
+        File file = new File(fileDir);
+        if(!file.exists()){
+            file.mkdir();
+        }
+        FileOutputStream out = new FileOutputStream(file + "/"+data.getFileName());
+        return exportDataToExcel(data, out);
+    }
+
+    @Override
+    public int exportExcel(HttpServletResponse response, ExcelData data) throws Exception {
+
+        response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(data.getFileName(), "utf-8"));
+
+        return exportDataToExcel(data, response.getOutputStream());
+    }
+
+    /**
+     * 根据不同的后缀名获取workbook
+     * @param fileName
+     * @return
+     */
+    @Override
+    public Workbook getWorkbook( String fileName)  {
+        Workbook workbook = null;
+        if(fileName.endsWith(FileConstant.SUFFIX_XLS)){
+            workbook = new HSSFWorkbook();
+        }else if(fileName.endsWith(FileConstant.SUFFIX_XLSX)){
+            workbook = new XSSFWorkbook();
+        }else{
+           return  null;
+        }
+        return workbook;
+    }
+
+
 
 
 }

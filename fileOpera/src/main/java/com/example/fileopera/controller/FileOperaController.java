@@ -1,10 +1,14 @@
 package com.example.fileopera.controller;
 
 import com.example.fileopera.constant.ErrorEnum;
+import com.example.fileopera.entity.People;
+import com.example.fileopera.service.ExcelOperaService;
+import com.example.fileopera.util.ExcelData;
 import com.example.fileopera.util.FileUtil;
 import com.example.fileopera.util.ResponseObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +17,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author: Kayla, Ye
@@ -25,6 +31,9 @@ import java.util.List;
 @Controller
 @Api(tags = "file")
 public class FileOperaController {
+
+    @Autowired
+    ExcelOperaService excelOperaService;
 
     //获取file.html页面
     @RequestMapping("file")
@@ -96,6 +105,7 @@ public class FileOperaController {
             response.setContentType("application/force-download");
             response.setHeader("Content-Disposition", "attachment;fileName=" + filename);
 
+            //把已存在的文件写入要导出的文件中
             byte[] buffer = new byte[1024];
             FileInputStream fis = null; //文件输入流
             BufferedInputStream bis = null;
@@ -125,5 +135,38 @@ public class FileOperaController {
         return null;
     }
 
+
+
+    @RequestMapping("/exportexcel")
+    @ApiOperation(value = "导出文件")
+    public  String createExcel( HttpServletResponse response) throws Exception {
+        String filename = "temp"+ UUID.randomUUID()+".xlsx";
+        List<String> titleList = new ArrayList<>();
+        titleList.add("姓名");
+        titleList.add("电话");
+        titleList.add("住址");
+
+        //构造excelData
+        ExcelData data = new ExcelData();
+        data.setTitle(titleList);
+        data.setFileName(filename);
+        List<List<Object>> rowData = new ArrayList<>();
+        int ListNum = 7;
+        List<People> peopleList = new ArrayList<>(ListNum);
+        for(int i = 0 ; i < ListNum; i++){
+            People people = new People("String", "string", "String");
+            peopleList.add(people);
+        }
+        for(People people: peopleList){
+            List<Object> row = new ArrayList<>();
+            row.add(people.getName());
+            row.add(people.getPhone());
+            row.add(people.getAddress());
+            rowData.add(row);
+        }
+        data.setRows(rowData);
+        excelOperaService.exportExcel(response, data);
+        return null;
+    }
 
 }

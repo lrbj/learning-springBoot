@@ -1,5 +1,7 @@
 package com.example.fileopera.util;
 
+import com.example.fileopera.constant.FileConstant;
+
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -40,5 +42,25 @@ public class FileUtil {
         }
 
         return path;
+    }
+
+    /**
+     * 判断文件路径的是文件目录还是文件，如果不存在则创建
+     * @param filePath
+     * @return
+     */
+    public static int filePathType(String filePath){
+        File file = new File(filePath);
+        int filePathType = 0;
+        if(file.isDirectory()){
+            filePathType = FileConstant.IS_DIRECTORY;
+        }else if(file.isFile()){
+            filePathType = FileConstant.IS_FILE;
+        }else{
+            return FileConstant.ERR_FILE;//错误
+        }
+
+        return  filePathType;
+
     }
 }

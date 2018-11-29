@@ -5,7 +5,7 @@ package com.example.fileopera.constant;
  * @Description:
  * @Date:Created in 2:10 PM 10/18/2018
  */
-public class FileImportAction {
+public class FileConstant {
     public static final int ERR_SUCCESS = 0;
     public static final int ERR_FILE = -1; //文件错误
     public static final int ERR_CLUMN = -2;//列错误
@@ -30,4 +30,8 @@ public class FileImportAction {
     //导入或者删除操作
     public static  final int REMOVE_DBDATA = 0;//删除数据
     public static  final int ADD_DBDATA    = 1;//增加数据
+
+    //判断文件是否是文件夹还是文件
+    public static  final int IS_DIRECTORY = 0;//文件夹
+    public  static final int IS_FILE  = 1;//文件
 }

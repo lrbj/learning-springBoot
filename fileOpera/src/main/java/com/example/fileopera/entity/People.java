@@ -23,4 +23,14 @@ public class People  {
 
     private String address;//地址
 
+    public  People(){
+
+    }
+
+    public People(String name, String phone, String address){
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+    }
+
 }
