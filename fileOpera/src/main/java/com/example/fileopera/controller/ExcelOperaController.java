@@ -1,5 +1,6 @@
 package com.example.fileopera.controller;
 
+import com.example.fileopera.util.ReadFileConditon;
 import com.example.fileopera.entity.People;
 import com.example.fileopera.service.ExcelOperaService;
 import com.example.fileopera.util.ExcelData;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +35,16 @@ public class ExcelOperaController {
     @ApiOperation(value = "上传excel文件")
     public ResponseObject upLoadExcel(@RequestParam("file") MultipartFile file)throws Exception{
 
-        excelOperaService.readExcel(file);
+        //基本文件读取
+        //excelOperaService.readExcel(file);
+        ReadFileConditon readFileConditon = new ReadFileConditon();
+        readFileConditon.setColumnNum(10);
+        readFileConditon.setSheetIndex(2);
+        readFileConditon.setIgonreRowNum(1);
+        List<String> stringList = excelOperaService.readExcel(file, readFileConditon);
+        for(String str: stringList){
+            System.out.println("str="+ str);
+        }
 
         return  ResponseObject.success(null);
     }

@@ -1,9 +1,12 @@
 package com.example.fileopera.util;
 
+import com.example.fileopera.constant.ErrorEnum;
 import com.example.fileopera.constant.FileConstant;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: Kayla, Ye
@@ -62,5 +65,31 @@ public class FileUtil {
 
         return  filePathType;
 
+    }
+
+    public static ResponseObject getErrResult(int[] result){
+
+        if (result[0] != FileConstant.ERR_SUCCESS) {
+            Object resultObj = new Object();
+            switch (result[0]) {
+                case FileConstant.CLUMNNUM: {
+                    resultObj = ErrorEnum.IMPORT_DATA_CLUMMUN_ERR;
+                    break;
+                }
+                case FileConstant.ERR_REPEAT: {
+                    resultObj = ErrorEnum.IMPORT_DATA_REPEAT;
+                    break;
+                }
+                default: {
+                    resultObj = ErrorEnum.IMPORT_DATA_FAIL;
+                    break;
+                }
+            }
+
+            return ResponseObject.fail((ErrorEnum) resultObj);
+        }
+        Map<String, Integer> resultMap = new HashMap<>();
+        resultMap.put(FileConstant.SUCCESSROWS, result[1]);
+        return ResponseObject.success(resultMap);
     }
 }

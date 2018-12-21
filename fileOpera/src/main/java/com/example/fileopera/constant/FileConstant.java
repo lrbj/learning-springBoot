@@ -11,6 +11,7 @@ public class FileConstant {
     public static final int ERR_CLUMN = -2;//列错误
     public static final int ERR_REPEAT = -3;//存在重复
     public static final int ERR_OPEARA_NOTEXIST = -4;//操作不存在
+    public static final int ERR_SHEET_NOTEXIST = - 5;//excel的分页不存在
 
     public static final int IGONREROWS = 1;//忽略统计的的头几行
     public static final int CLUMNNUM = 8;//固定的行数
@@ -22,6 +23,9 @@ public class FileConstant {
 
     public static final String CODE_FORMAT = "utf-8";
 
+    //特定的行
+    public static final int TITLE_ROWINDEX = 0; //题目所在行
+
     //验证的列
     public static final int COLUMN_TYPE = 1; //系统类型
     public static final int COLUMN_ADDRESS = 6;//设备地址
@@ -30,6 +34,12 @@ public class FileConstant {
     //导入或者删除操作
     public static  final int REMOVE_DBDATA = 0;//删除数据
     public static  final int ADD_DBDATA    = 1;//增加数据
+    public static final int  GENERATE_JSON = 3;//生成json数据
+
+
+
+    public static final String  JSON_KEY = "people";//生成Json 文件的key
+    public static final String  JSON_DIR = "./json/";
 
     //判断文件是否是文件夹还是文件
     public static  final int IS_DIRECTORY = 0;//文件夹

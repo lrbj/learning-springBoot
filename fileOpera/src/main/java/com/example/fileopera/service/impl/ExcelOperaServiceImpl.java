@@ -2,6 +2,7 @@ package com.example.fileopera.service.impl;
 
 import com.example.fileopera.constant.ErrorEnum;
 import com.example.fileopera.constant.FileConstant;
+import com.example.fileopera.util.ReadFileConditon;
 import com.example.fileopera.exception.BusinessException;
 import com.example.fileopera.service.ExcelOperaService;
 import com.example.fileopera.util.ExcelData;
@@ -17,6 +18,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -90,6 +93,119 @@ public class ExcelOperaServiceImpl implements ExcelOperaService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    /**
+     * 检查当前行是否合法
+     * @param sheet 当前分页
+     * @param rowIndex 行id
+     * @param columnNum 指定的列数
+     * @return
+     */
+    @Override
+    public   boolean checkExcelLineData(Sheet sheet,int rowIndex, int columnNum){
+        Row row = sheet.getRow(rowIndex);
+        if(row == null ){
+            return  true;
+        }
+        int count = 0;
+        for(Cell cell:row){ //非空单元个数
+            count++;
+        }
+        if(count < columnNum ){
+            return  true;
+        }
+        return  false;
+    }
+
+    @Override
+    public boolean checkSheet(Workbook workbook, int sheetIndex) {
+        if(null == workbook ||  null == workbook.getSheetAt(sheetIndex) ){
+            return  true;
+        }
+
+        return  false;
+    }
+
+    @Override
+    public List<String> readExcelData(Sheet sheet, int ignoreRowIndex, int columnNum) {
+        HashSet<String> hashSet = new HashSet<>();
+        int rowNum = sheet.getLastRowNum() + 1;
+        int count = 0;
+        List<String> stringList = new ArrayList<>();
+        for(int i = ignoreRowIndex ; i < rowNum; i++ ) {
+            Row row = sheet.getRow(i);
+            if( null == row ){
+                continue;
+            }
+            String str = new String();
+            for(int j = 0; j < columnNum; j++){
+                Cell cell = row.getCell(j);
+                if( (null == cell) || (CellType.BLANK == cell.getCellType())  ){ //如果为空则退出
+                    str += " "+",";
+                    continue;
+                }
+                if(!cell.getCellType().equals(CellType.STRING)){
+                    cell.setCellType(CellType.STRING); //将excel的字符转化成string
+                }
+                str += cell.getStringCellValue().replace("\n", "")+",";//去掉换行字符
+            }
+
+            count++; //有效行
+            stringList.add(str);
+        }
+
+        return  stringList;
+    }
+
+    @Override
+    public Workbook getWorkbook(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        Workbook workbook = null;
+        String name = fileName.substring(0, fileName.lastIndexOf("."));
+
+        //判断版本
+        try {
+            if (fileName.endsWith(FileConstant.SUFFIX_XLS)) {
+                workbook = new HSSFWorkbook(file.getInputStream());
+            } else if (fileName.endsWith(FileConstant.SUFFIX_XLSX)) {
+                workbook = new XSSFWorkbook(file.getInputStream());
+            }else{
+                workbook = null;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return  workbook;
+    }
+
+    @Override
+    public List<String> readExcel(MultipartFile file, ReadFileConditon readFileConditon) throws BusinessException {
+        //1、文件分页是否存在
+        Workbook workbook = getWorkbook(file);
+        if(checkSheet(workbook, readFileConditon.getSheetIndex())){
+             throw  new BusinessException(ErrorEnum.PARAM_ERROR.getCode(), "文件不存在") ;
+        }
+
+        //2、表格题目的判断
+        Sheet sheet = workbook.getSheetAt(readFileConditon.getSheetIndex());
+        if(checkExcelLineData(sheet, FileConstant.TITLE_ROWINDEX, readFileConditon.getColumnNum())){
+            throw  new BusinessException(ErrorEnum.IMPORT_DATA_CLUMMUN_ERR.getCode(), ErrorEnum.IMPORT_DATA_CLUMMUN_ERR.getMsg());
+        }
+
+        //3、将文件中所有数据取出
+        List<String> stringList = readExcelData(sheet, readFileConditon.getIgonreRowNum(), readFileConditon.getColumnNum());
+
+        if(workbook != null ){
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return  stringList;
 
     }
 
