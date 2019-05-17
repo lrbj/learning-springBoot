@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisdemo.mapper.TaskMapper">
+  <resultMap id="BaseResultMap" type="com.example.mybatisdemo.model.Task">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="process_instance_id" jdbcType="VARCHAR" property="processInstanceId" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="assignee_id" jdbcType="VARCHAR" property="assigneeId" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, process_instance_id, task_id, task_name, assignee_id, start_time, end_time, audit_status,
+    "comment"
+  </sql>
+
+  <select id="selectByTaskId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from data_task
+    where task_id = #{taskId,jdbcType=VARCHAR}
+    order by start_time desc
+  </select>
+
+    <insert id="insert" parameterType="com.example.mybatisdemo.model.Task"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into data_task (process_instance_id, task_id,
+                               task_name, assignee_id, start_time,
+                               end_time, audit_status, "comment")
+        values (#{processInstanceId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR},
+                #{taskName,jdbcType=VARCHAR}, #{assigneeId,jdbcType=VARCHAR},
+                #{startTime,jdbcType=TIMESTAMP},
+                #{endTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=INTEGER},
+                #{comment,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.example.mybatisdemo.model.Task">
+        update data_task
+        set process_instance_id = #{processInstanceId,jdbcType=VARCHAR},
+            task_id             = #{taskId,jdbcType=VARCHAR},
+            task_name           = #{taskName,jdbcType=VARCHAR},
+            assignee_id         = #{assigneeId,jdbcType=VARCHAR},
+            start_time          = #{startTime,jdbcType=TIMESTAMP},
+            end_time            = #{endTime,jdbcType=TIMESTAMP},
+            audit_status        = #{auditStatus,jdbcType=INTEGER},
+            "comment"           = #{comment,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 根据用户id及审批状态id，查询相应的任务列表 -->
+    <select id="queryTasksByStatusIdAndAssigneeId"
+        resultType="com.example.mybatisdemo.dto.TaskDto">
+        select prosess.application_id as applicationId,
+               task.task_name         as name,
+               task.assignee_id       as assigneeUserId,
+               task.audit_status      as statusId,
+               task.comment           as comment,
+               task.start_time        as startTime,
+               task.end_time          as endTime,
+               task.task_id           as taskId,
+               prosess.interrupt_type as interruptType
+        from data_task task,
+             data_process prosess
+        where task.process_instance_id = prosess.process_instance_id
+          and task.assignee_id =
+              #{assigneeId,jdbcType=VARCHAR}
+          and task.audit_status =
+              #{statusId,jdbcType=INTEGER}
+        order by startTime desc
+    </select>
+
+    <!-- 根据流程id，查询相应的任务列表 -->
+    <select id="queryTasksByProcessInstanceId"
+        resultType="com.example.mybatisdemo.dto.TaskDto">
+        select process.application_id as applicationId,
+               task.task_name         as name,
+               task.assignee_id       as assigneeUserId,
+               task.audit_status      as statusId,
+               task.comment           as comment,
+               task.start_time        as startTime,
+               task.end_time          as endTime,
+               task.task_id           as taskId
+        from data_task task,
+             data_process process
+        where task.process_instance_id = process.process_instance_id
+          and task.process_instance_id =
+              #{processInstanceId,jdbcType=VARCHAR}
+        order by start_time desc
+    </select>
+</mapper>

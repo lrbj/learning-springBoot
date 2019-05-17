@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisdemo.mapper.ProcessMapper">
+    <resultMap id="BaseResultMap" type="com.example.mybatisdemo.model.Process">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="application_id" jdbcType="VARCHAR" property="applicationId" />
+        <result column="process_instance_id" jdbcType="VARCHAR" property="processInstanceId" />
+        <result column="interrupt_type" jdbcType="INTEGER" property="interruptType" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+        <result column="operating_status" jdbcType="INTEGER" property="operatingStatus" />
+        <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+        <result column="last_commit_time" jdbcType="TIMESTAMP" property="lastCommitTime" />
+        <result column="last_reject_time" jdbcType="TIMESTAMP" property="lastRejectTime" />
+        <result column="last_return_application_time" jdbcType="TIMESTAMP"
+            property="lastReturnApplicationTime" />
+        <result column="last_approve_time" jdbcType="TIMESTAMP" property="lastApproveTime" />
+        <result column="last_audit_time" jdbcType="TIMESTAMP" property="lastAuditTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            id,
+            application_id,
+            process_instance_id,
+            interrupt_type,
+            create_time,
+            last_update_time,
+            operating_status,
+            audit_status,
+            last_commit_time,
+            last_reject_time,
+            last_return_application_time,
+            last_approve_time,
+            last_audit_time
+    </sql>
+
+    <!-- 根据流程id，查询相应的流程 -->
+    <select id="selectByProcessInstanceId" parameterType="java.lang.String"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from data_process
+        where process_instance_id = #{processInstanceId,jdbcType=VARCHAR}
+        order by create_time desc
+    </select>
+
+    <!-- 根据申请编号，查询相应的流程列表 -->
+    <select id="queryProcessesByApplicationId" parameterType="java.lang.String"
+        resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from data_process
+        where application_id = #{applicationId,jdbcType=VARCHAR}
+        order by create_time desc
+    </select>
+
+    <insert id="insert"
+        parameterType="com.example.mybatisdemo.model.Process"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into data_process (application_id, process_instance_id,
+                                  interrupt_type, create_time, last_update_time,
+                                  operating_status, audit_status, last_commit_time,
+                                  last_reject_time, last_return_application_time,
+                                  last_approve_time, last_audit_time)
+        values (#{applicationId,jdbcType=VARCHAR},
+                #{processInstanceId,jdbcType=VARCHAR},
+                #{interruptType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+                #{lastUpdateTime,jdbcType=TIMESTAMP},
+                #{operatingStatus,jdbcType=INTEGER}, #{auditStatus,jdbcType=INTEGER},
+                #{lastCommitTime,jdbcType=TIMESTAMP},
+                #{lastRejectTime,jdbcType=TIMESTAMP},
+                #{lastReturnApplicationTime,jdbcType=TIMESTAMP},
+                #{lastApproveTime,jdbcType=TIMESTAMP}, #{lastAuditTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="update"
+        parameterType="com.example.mybatisdemo.model.Process">
+        update data_process
+        set application_id               = #{applicationId,jdbcType=VARCHAR},
+            process_instance_id          = #{processInstanceId,jdbcType=VARCHAR},
+            interrupt_type               = #{interruptType,jdbcType=INTEGER},
+            create_time                  = #{createTime,jdbcType=TIMESTAMP},
+            last_update_time             = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            operating_status             = #{operatingStatus,jdbcType=INTEGER},
+            audit_status                 = #{auditStatus,jdbcType=INTEGER},
+            last_commit_time             = #{lastCommitTime,jdbcType=TIMESTAMP},
+            last_reject_time             = #{lastRejectTime,jdbcType=TIMESTAMP},
+            last_return_application_time = #{lastReturnApplicationTime,jdbcType=TIMESTAMP},
+            last_approve_time            = #{lastApproveTime,jdbcType=TIMESTAMP},
+            last_audit_time              = #{lastAuditTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
