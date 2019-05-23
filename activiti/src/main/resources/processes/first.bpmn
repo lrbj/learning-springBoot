@@ -3,8 +3,35 @@
   <process id="myProcess_1" isClosed="false" isExecutable="true" processType="None">
     <startEvent id="_2" name="StartEvent"/>
     <endEvent id="_3" name="EndEvent"/>
-    <userTask activiti:assignee="寮犱�?" activiti:exclusive="true" id="_4" name="UserTask"/>
-    <sequenceFlow id="_5" sourceRef="_2" targetRef="_4"/>
+    <userTask activiti:assignee="閻庢鍠氭慨宕囩�??" activiti:exclusive="true" id="_4" name="UserTask">
+      <extensionElements>
+        <activiti:taskListener event="create"/>
+        <activiti:formProperty/>
+        <activiti:taskListener event="assignment"/>
+        <activiti:executionListener event="end"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="_5" sourceRef="_2" targetRef="_4">
+      <extensionElements>
+        <activiti:executionListener delegateExpression="${approveListener}" event="end">
+          <activiti:field>
+            <activiti:string/>
+          </activiti:field>
+          <activiti:field>
+            <activiti:string/>
+          </activiti:field>
+          <activiti:field>
+            <activiti:string/>
+          </activiti:field>
+          <activiti:field>
+            <activiti:string/>
+          </activiti:field>
+          <activiti:field>
+            <activiti:string/>
+          </activiti:field>
+        </activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
     <sequenceFlow id="_6" sourceRef="_4" targetRef="_3"/>
   </process>
   <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">

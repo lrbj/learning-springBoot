@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisdemo.mapper.AuditMapper">
+  <resultMap id="BaseResultMap" type="com.example.mybatisdemo.model.Audit">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="application_id" jdbcType="VARCHAR" property="applicationId" />
+    <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+    <result column="last_activity_type" jdbcType="INTEGER" property="lastActivityType" />
+    <result column="last_activity_status" jdbcType="INTEGER" property="lastActivityStatus" />
+    <result column="last_activity_comment" jdbcType="VARCHAR" property="lastActivityComment" />
+      <result column="applied" jdbcType="BOOLEAN" property="applied" />
+      <result column="acceptance_enabled" jdbcType="BOOLEAN" property="acceptanceEnabled" />
+    <result column="apply_form" jdbcType="VARCHAR" property="applyForm" />
+    <result column="unit_park" jdbcType="VARCHAR" property="unitPark" />
+    <result column="unit_business_group" jdbcType="VARCHAR"
+        property="unitBusinessGroup" />
+      <result column="unit_business_group_name" jdbcType="VARCHAR"
+              property="unitBusinessGroupName" />
+    <result column="unit_business_department" jdbcType="VARCHAR"
+        property="unitBusinessDepartment" />
+    <result column="plan_start_time" jdbcType="TIMESTAMP" property="planStartTime" />
+    <result column="plan_end_time" jdbcType="TIMESTAMP" property="planEndTime" />
+
+  </resultMap>
+
+  <sql id="Base_Column_List">
+      id,
+      application_id,
+      apply_user_id,
+      create_time,
+      last_update_time,
+      last_activity_type,
+      last_activity_status,
+      last_activity_comment,
+      applied,
+      acceptance_enabled,
+      apply_form,
+      unit_park,
+      unit_business_group,
+      unit_business_group_name,
+      unit_business_department,
+      plan_start_time,
+      plan_end_time
+
+  </sql>
+
+    <select id="selectByApplicationId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from data_audit
+        where application_id = #{applicationId,jdbcType=VARCHAR}
+        order by create_time desc
+    </select>
+
+    <insert id="insert"
+        parameterType="com.example.mybatisdemo.model.Audit"
+        useGeneratedKeys="true" keyProperty="id">
+    insert into data_audit (application_id, apply_user_id,
+                                create_time, last_update_time, last_activity_type,
+                                last_activity_status, last_activity_comment, applied,
+                                acceptance_enabled, apply_form,
+                                unit_park,
+                                unit_business_group, unit_business_group_name,
+                                unit_business_department,
+                                plan_start_time, plan_end_time
+                                )
+    values (#{applicationId,jdbcType=VARCHAR},
+            #{applyUserId,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP},
+            #{lastActivityType,jdbcType=INTEGER},
+            #{lastActivityStatus,jdbcType=INTEGER}, #{lastActivityComment,jdbcType=VARCHAR},
+            #{applied,jdbcType=BOOLEAN},
+            #{acceptanceEnabled,jdbcType=BOOLEAN},
+            #{applyForm,jdbcType=VARCHAR},
+            #{unitPark,jdbcType=VARCHAR},
+            #{unitBusinessGroup,jdbcType=VARCHAR},
+            #{unitBusinessGroupName,jdbcType=VARCHAR},
+            #{unitBusinessDepartment,jdbcType=VARCHAR},
+            #{planStartTime,jdbcType=TIMESTAMP}, #{planEndTime,jdbcType=TIMESTAMP}
+            )
+  </insert>
+
+  <update id="update" parameterType="com.example.mybatisdemo.model.Audit">
+    update data_audit
+    set application_id                 = #{applicationId,jdbcType=VARCHAR},
+        apply_user_id                  = #{applyUserId,jdbcType=VARCHAR},
+        create_time                    = #{createTime,jdbcType=TIMESTAMP},
+        last_update_time               = #{lastUpdateTime,jdbcType=TIMESTAMP},
+        last_activity_type             = #{lastActivityType,jdbcType=INTEGER},
+        last_activity_status           = #{lastActivityStatus,jdbcType=INTEGER},
+        last_activity_comment          = #{lastActivityComment,jdbcType=VARCHAR},
+        applied                        = #{applied,jdbcType=BOOLEAN},
+        acceptance_enabled               = #{acceptanceEnabled,jdbcType=BOOLEAN},
+        apply_form                     = #{applyForm,jdbcType=VARCHAR},
+        unit_park                = #{unitPark,jdbcType=VARCHAR},
+        unit_business_group      = #{unitBusinessGroup,jdbcType=VARCHAR},
+        unit_business_group_name      = #{unitBusinessGroupName,jdbcType=VARCHAR},
+        unit_business_department = #{unitBusinessDepartment,jdbcType=VARCHAR},
+        plan_start_time           = #{planStartTime,jdbcType=TIMESTAMP},
+        plan_end_time             = #{planEndTime,jdbcType=TIMESTAMP}
+
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!-- 根据窗口请求参数体，查询相应的消审申请列表 -->
+    <select id="queryAuditRequest"
+        resultType="com.example.mybatisdemo.dto.AuditRequestDto"
+        useCache="true">
+        select
+        audit.id as id,
+        audit.application_id as applicationId,
+        audit.apply_user_id as applyUserId,
+        audit.apply_form as applyForm,
+        audit.create_time as createTime,
+        audit.last_update_time as lastUpdateTime,
+        audit.last_activity_type as lastActivityTypeId,
+        audit.last_activity_status as lastActivityStatusId,
+        audit.last_activity_comment as lastActivityComment,
+        audit.applied as applied,
+        audit.acceptance_enabled as acceptanceEnabled,
+        audit.unit_park as unitParkId,
+        audit.unit_business_group as unitBusinessGroupId,
+        audit.unit_business_department as unitBusinessDepartmentId,
+        audit.plan_start_time as planStartTime,
+        audit.plan_end_time as planEndTime
+        from data_audit audit
+        <where>
+            <if test="applicationId!=null">
+                application_id=#{applicationId,jdbcType=VARCHAR}
+            </if>
+            <if test="applyStartTime!=null">
+                and create_time &gt;= #{applyStartTime,jdbcType=BIGINT}
+            </if>
+            <if test="applyEndTime!=null">
+                and create_time &lt; #{applyEndTime,jdbcType=BIGINT}
+            </if>
+            <if test="applyUserId!=null">
+                and apply_user_id=#{applyUserId,jdbcType=VARCHAR}
+            </if>
+
+            <if test="unitParkId!=null">
+                and apply_unit_park=#{unitParkId,jdbcType=VARCHAR}
+            </if>
+            <if test="unitBusinessGroupId!=null">
+                and unit_business_group=#{unitBusinessGroupId,jdbcType=VARCHAR}
+            </if>
+            <if test="unitBusinessDepartmentId!=null">
+                and unit_business_department=#{unitBusinessDepartmentId,jdbcType=VARCHAR}
+            </if>
+            <if test="lastActivityType!=null">
+                and last_activity_type=#{lastActivityType,jdbcType=INTEGER}
+            </if>
+            <if test="lastActivityStatus!=null">
+                and last_activity_status=#{lastActivityStatus,jdbcType=INTEGER}
+            </if>
+            <if test="applied!=null">
+                and applied=#{applied,jdbcType=BOOLEAN}
+            </if>
+
+
+        </where>
+        order by createTime desc
+    </select>
+
+
+
+    <!-- 根据申请编号，查询消审申请详情 -->
+    <select id="queryAuditRequestDetailsByApplicationId"
+            resultType="com.example.mybatisdemo.dto.AuditRequestDto">
+        select audit.id                             as id,
+               audit.application_id                 as applicationId,
+               audit.apply_user_id                  as applyUserId,
+               audit.apply_form                     as applyForm,
+               audit.create_time                    as createTime,
+               audit.last_update_time               as lastUpdateTime,
+               audit.last_activity_type             as lastActivityTypeId,
+               audit.last_activity_status           as lastActivityStatusId,
+               audit.last_activity_comment          as lastActivityComment,
+               audit.unit_park                as unitPark,
+               audit.unit_business_group      as unitBusinessGroup,
+               audit.unit_business_department as unitBusinessDepartment,
+               audit.plan_start_time           as planStartTime,
+               audit.plan_end_time             as planEndTime,
+               audit.applied as applied,
+               audit.acceptance_enabled as acceptanceEnabled
+
+        from data_audit audit
+        where application_id = #{applicationId,jdbcType=VARCHAR}
+        order by createTime desc
+    </select>
+
+
+    <!-- 表单查询 -->
+    <select id="queryAuditRequestByGroupAndMonth"
+            resultType="com.example.mybatisdemo.dto.AuditGroupData">
+        select audit.unit_business_group_name                 as groupName,
+                sum(case when last_activity_status = #{approving,jdbcType=INTEGER} then 1 else 0 end )approving,
+                sum(case when last_activity_status = #{unapplied,jdbcType=INTEGER} then 1 else 0 end )unapplied,
+                sum(case when last_activity_status = #{unapproved,jdbcType=INTEGER} then 1 else 0 end )unapproved,
+                sum(case when last_activity_status = #{approved,jdbcType=INTEGER} then 1 else 0 end )approved,
+                sum(case when last_activity_status = #{returned,jdbcType=INTEGER} then 1 else 0 end )returned,
+                count(*) total
+        from data_audit audit
+        where
+           last_update_time<![CDATA[>=]]>  #{startDate,jdbcType=BIGINT}
+           and last_update_time<![CDATA[<=]]> #{endDate,jdbcType=BIGINT}
+--         last_update_time<![CDATA[>=]]>  #{startDate,jdbcType=TIMESTAMP}
+--         and last_update_time<![CDATA[<=]]> #{endDate,jdbcType=TIMESTAMP}
+-- --         BETWEEN STR_TO_DATE(#{startDate},'%Y-%m-%d %H:%i:%s')
+-- --         AND STR_TO_DATE(#{endDate},'%Y-%m-%d %H:%i:%s')
+
+        group by groupName
+    </select>
+</mapper>

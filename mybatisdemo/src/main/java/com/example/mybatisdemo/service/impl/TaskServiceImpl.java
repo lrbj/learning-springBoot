@@ -5,7 +5,6 @@ import com.example.mybatisdemo.mapper.TaskMapper;
 import com.example.mybatisdemo.model.Task;
 import com.example.mybatisdemo.service.TaskService;
 import com.google.common.base.Preconditions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
