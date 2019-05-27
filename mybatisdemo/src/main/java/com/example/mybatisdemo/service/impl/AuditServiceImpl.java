@@ -66,13 +66,13 @@ public class AuditServiceImpl implements AuditService {
         String strEndTime = String.format("%d-%02d-01 00:00:00", endYear, (month+1)%12);
         logger.info("strStartTime:"+strStartTime);
         logger.info("strEndTime:" + strEndTime);
-        Timestamp startTime = Timestamp.valueOf(strEndTime);
+        Timestamp startTime = Timestamp.valueOf(strStartTime);
         Timestamp endTime = Timestamp.valueOf(strEndTime);
         logger.info("startTime:"+startTime);
         logger.info("endTime:" + endTime);
        Timestamp now = new Timestamp(System.currentTimeMillis());
        //return null;
-        return (List<AuditGroupData>) auditMapper.queryAuditRequestByGroupAndMonth(now,now,1,2,3,4,5);
+        return (List<AuditGroupData>) auditMapper.queryAuditRequestByGroupAndMonth(startTime,endTime,1,2,3,4,5);
 
     }
 }
