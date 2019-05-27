@@ -91,7 +91,7 @@ public interface AuditMapper {
      * @param unapproved
      * @return
      */
-    AuditGroupData queryAuditRequestByGroupAndMonth(@Param("startDate") Timestamp startDate,
+    List<AuditGroupData> queryAuditRequestByGroupAndMonth(@Param("startDate") Timestamp startDate,
                                                     @Param("endDate") Timestamp endDate,
                                                     @Param("approved") Integer approved,//通过
                                                     @Param("returned") Integer returned,//退件

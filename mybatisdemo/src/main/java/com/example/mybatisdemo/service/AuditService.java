@@ -30,5 +30,5 @@ public interface AuditService {
 
    AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId);
 
-   AuditGroupData queryAuditRequestByGroupAndMonth(Integer month, Integer year);
+   List<AuditGroupData> queryAuditRequestByGroupAndMonth(Integer month, Integer year);
 }

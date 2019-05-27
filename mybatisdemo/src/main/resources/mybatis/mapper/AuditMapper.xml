@@ -195,7 +195,8 @@
     <!-- 表单查询 -->
     <select id="queryAuditRequestByGroupAndMonth"
             resultType="com.example.mybatisdemo.dto.AuditGroupData">
-        select audit.unit_business_group_name                 as groupName,
+        select
+                audit.unit_business_group_name                 as groupName,
                 sum(case when last_activity_status = #{approving,jdbcType=INTEGER} then 1 else 0 end )approving,
                 sum(case when last_activity_status = #{unapplied,jdbcType=INTEGER} then 1 else 0 end )unapplied,
                 sum(case when last_activity_status = #{unapproved,jdbcType=INTEGER} then 1 else 0 end )unapproved,
@@ -203,14 +204,15 @@
                 sum(case when last_activity_status = #{returned,jdbcType=INTEGER} then 1 else 0 end )returned,
                 count(*) total
         from data_audit audit
-        where
-           last_update_time<![CDATA[>=]]>  #{startDate,jdbcType=BIGINT}
-           and last_update_time<![CDATA[<=]]> #{endDate,jdbcType=BIGINT}
---         last_update_time<![CDATA[>=]]>  #{startDate,jdbcType=TIMESTAMP}
---         and last_update_time<![CDATA[<=]]> #{endDate,jdbcType=TIMESTAMP}
--- --         BETWEEN STR_TO_DATE(#{startDate},'%Y-%m-%d %H:%i:%s')
--- --         AND STR_TO_DATE(#{endDate},'%Y-%m-%d %H:%i:%s')
 
-        group by groupName
+        where
+        <if test="startDate!=null">
+             last_update_time &gt;=#{startDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endDate!=null">
+            and last_update_time &lt;= #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        group by  groupName
+
     </select>
 </mapper>

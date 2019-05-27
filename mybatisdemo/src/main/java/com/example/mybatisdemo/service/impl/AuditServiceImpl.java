@@ -59,7 +59,7 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public AuditGroupData queryAuditRequestByGroupAndMonth(Integer month, Integer year) {
+    public List<AuditGroupData> queryAuditRequestByGroupAndMonth(Integer month, Integer year) {
 
         String strStartTime = String.format("%d-%02d-01 00:00:00",year,month);
         Integer endYear = month/12+ year;
@@ -72,7 +72,7 @@ public class AuditServiceImpl implements AuditService {
         logger.info("endTime:" + endTime);
        Timestamp now = new Timestamp(System.currentTimeMillis());
        //return null;
-         return auditMapper.queryAuditRequestByGroupAndMonth(now,now,1,2,3,4,5);
+        return (List<AuditGroupData>) auditMapper.queryAuditRequestByGroupAndMonth(now,now,1,2,3,4,5);
 
     }
 }
