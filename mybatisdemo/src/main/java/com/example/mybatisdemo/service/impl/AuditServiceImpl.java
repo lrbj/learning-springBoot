@@ -72,6 +72,7 @@ public class AuditServiceImpl implements AuditService {
         logger.info("endTime:" + endTime);
        Timestamp now = new Timestamp(System.currentTimeMillis());
        //return null;
+        System.out.println(auditMapper.queryAuditRequestByMonth(startTime,endTime,1,2,3,4,5));
         return (List<AuditGroupData>) auditMapper.queryAuditRequestByGroupAndMonth(startTime,endTime,1,2,3,4,5);
 
     }

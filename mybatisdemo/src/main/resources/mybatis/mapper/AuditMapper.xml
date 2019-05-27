@@ -215,4 +215,27 @@
         group by  groupName
 
     </select>
+
+    <!-- 表单查询 -->
+    <select id="queryAuditRequestByMonth"
+            resultType="com.example.mybatisdemo.dto.AuditTotalData">
+        select
+        sum(case when last_activity_status = #{approving,jdbcType=INTEGER} then 1 else 0 end )approving,
+        sum(case when last_activity_status = #{unapplied,jdbcType=INTEGER} then 1 else 0 end )unapplied,
+        sum(case when last_activity_status = #{unapproved,jdbcType=INTEGER} then 1 else 0 end )unapproved,
+        sum(case when last_activity_status = #{approved,jdbcType=INTEGER} then 1 else 0 end )approved,
+        sum(case when last_activity_status = #{returned,jdbcType=INTEGER} then 1 else 0 end )returned,
+        count(*) total
+        from data_audit audit
+
+        where
+        <if test="startDate!=null">
+            last_update_time &gt;=#{startDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endDate!=null">
+            and last_update_time &lt;= #{endDate,jdbcType=TIMESTAMP}
+        </if>
+
+
+    </select>
 </mapper>

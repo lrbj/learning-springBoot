@@ -3,6 +3,7 @@ package com.example.mybatisdemo.mapper;
 
 import com.example.mybatisdemo.dto.AuditGroupData;
 import com.example.mybatisdemo.dto.AuditRequestDto;
+import com.example.mybatisdemo.dto.AuditTotalData;
 import com.example.mybatisdemo.model.Audit;
 import org.apache.ibatis.annotations.Param;
 
@@ -104,5 +105,13 @@ public interface AuditMapper {
 
 
 
+    List<AuditTotalData> queryAuditRequestByMonth(@Param("startDate") Timestamp startDate,
+                                                  @Param("endDate") Timestamp endDate,
+                                                  @Param("approved") Integer approved,//通过
+                                                  @Param("returned") Integer returned,//退件
+                                                  @Param("unapplied") Integer unapplied, //待申请
+                                                  @Param("approving") Integer approving,//待审核
+                                                  @Param("unapproved") Integer unapproved//驳回
+    );
 
 }
