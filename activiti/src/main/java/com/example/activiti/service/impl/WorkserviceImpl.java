@@ -3,10 +3,7 @@ package com.example.activiti.service.impl;
 import com.example.activiti.controller.testController;
 import com.example.activiti.service.Workservice;
 import com.example.activiti.vo.TaskVo;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
@@ -20,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +46,11 @@ public class WorkserviceImpl implements Workservice {
 
     @Autowired
     HistoryService historyService;
+
+    @Autowired
+
+    @Resource
+    private FormService formService;
 
     @Override
     public void deploy() {
@@ -93,6 +96,10 @@ public class WorkserviceImpl implements Workservice {
 
         Map<String,Object> var = new HashMap<>();
         var.put("approvers1",data.getApprovers1());
+        var.put("comment",data.getComment());
+        var.put("result",data.getResult());
+     //   var.put("taskComments", data.getTaskComments());
+       // formService.saveFormData(taskId,var);
         taskService.complete(taskId,var);
         System.out.println("当前任务已执行完");
     }
@@ -185,6 +192,13 @@ public class WorkserviceImpl implements Workservice {
         } catch (Exception e) {
             logger.error("deployProcessDefine failed.", e);
         }
+    }
+
+    @Override
+    public void deleteProcessInstance(String processInstanceId, String deleteReason) {
+        logger.debug("deleteProcessInstance, processInstanceId: {}, deleteReason: {}.", processInstanceId,
+                deleteReason);
+        runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
     }
 
 

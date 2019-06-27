@@ -38,10 +38,13 @@ public class ApproveTaskListener implements TaskListener,ExecutionListener {
         //3.根据审批结果做处理
         if(ApproveResultEnum.REFUSE.getId().equals(result)){ //退件-->直接结束流程：只删除运行中的实例，历史实例保存记录
             this.runtimeService.deleteProcessInstance( delegateTask.getProcessInstanceId(), (String)delegateTask.getVariable("comment"));
+            logger.info(" notify(DelegateTask delegateTask): refuse");
 
         }else if(ApproveResultEnum.RETURN.getId().equals(result)){ //回退
             int rejectedCnt = (int)delegateTask.getVariable("rejected");
             delegateTask.setVariable("rejected", ++rejectedCnt);
+            logger.info(" notify(DelegateTask delegateTask): rejectedCnt:{}",rejectedCnt);
+
         }
         //  发送消息
 //        try {
@@ -80,6 +83,8 @@ public class ApproveTaskListener implements TaskListener,ExecutionListener {
         Map<String, TaskComment> taskComments = (Map<String, TaskComment>) delegateTask.getVariable("taskComments");
         Integer result = (Integer) delegateTask.getVariable("result");
 
+        logger.info("updateTaskComments: delegateTask:{}",delegateTask);
+        logger.info("updateTaskComments: result:{}",result);
         //添加每个task的审批历史
         TaskComment taskComment = new TaskComment();
         taskComment.setAssignee(delegateTask.getAssignee());

@@ -39,4 +39,6 @@ public interface Workservice {
     void queryHistoryTask(String processInstanceId);
 
     void deployProcessDefinition(InputStream inputStream, String trim, String trim1);
+
+    void deleteProcessInstance(String processInstanceId, String deleteReason);
 }

@@ -75,9 +75,15 @@ public class testController {
     }
 
     @DeleteMapping("/processDefi")
-    @ApiOperation(value = "删除流程")
+    @ApiOperation(value = "删除流程部署")
     void deleteProcessDefi(@RequestParam("deploymentId")String deploymentId){
         workservice.deleteProcessDefi(deploymentId);
+    }
+
+    @DeleteMapping("/processInstance")
+    @ApiOperation(value = "删除正常运行的流程")
+    void deleteProcessInstance(@RequestParam("processInstanceId")String processInstanceId, @RequestParam("deleteReason") String deleteReason){
+       workservice.deleteProcessInstance(processInstanceId, deleteReason);
     }
 
 }
