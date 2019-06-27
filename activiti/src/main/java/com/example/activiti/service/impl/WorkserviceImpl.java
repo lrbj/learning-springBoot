@@ -2,6 +2,7 @@ package com.example.activiti.service.impl;
 
 import com.example.activiti.controller.testController;
 import com.example.activiti.service.Workservice;
+import com.example.activiti.vo.TaskVo;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -20,7 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -85,8 +89,11 @@ public class WorkserviceImpl implements Workservice {
     }
 
     @Override
-    public void complieTask(String taskId) {
-        taskService.complete(taskId);
+    public void complieTask(String taskId,TaskVo data) {
+
+        Map<String,Object> var = new HashMap<>();
+        var.put("approvers1",data.getApprovers1());
+        taskService.complete(taskId,var);
         System.out.println("当前任务已执行完");
     }
 

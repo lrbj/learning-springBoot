@@ -1,6 +1,7 @@
 package com.example.activiti.controller;
 
 import com.example.activiti.service.Workservice;
+import com.example.activiti.vo.TaskVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 /**
@@ -60,8 +62,8 @@ public class testController {
 
     @PostMapping("/complete")
     @ApiOperation(value = "执行任务")
-    void completeTask(@RequestParam("taskId")String taskId) {
-        workservice.complieTask(taskId);
+    void completeTask(@RequestParam("taskId")String taskId, @RequestBody TaskVo taskVo) {
+        workservice.complieTask(taskId, taskVo);
     }
 
     @GetMapping("/queryProcess")

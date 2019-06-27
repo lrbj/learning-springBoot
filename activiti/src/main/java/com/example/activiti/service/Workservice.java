@@ -1,6 +1,9 @@
 package com.example.activiti.service;
 
+import com.example.activiti.vo.TaskVo;
+
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @Author: Kayla, Ye
@@ -18,7 +21,7 @@ public interface Workservice {
     void queryTask(String assignee);
 
     //4、完成任务
-    void complieTask(String taskId);
+    void complieTask(String taskId, TaskVo data);
 
     //5、查看流程的具体定义
     void queryProcessDefination(String processDefikey);
