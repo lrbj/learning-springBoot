@@ -1,5 +1,6 @@
 package com.example.activiti.service.impl;
 
+import com.example.activiti.controller.testController;
 import com.example.activiti.service.Workservice;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -13,10 +14,14 @@ import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.zip.ZipInputStream;
 
 /**
  * @Author: Kayla, Ye
@@ -25,6 +30,8 @@ import java.util.List;
  */
 @Service
 public class WorkserviceImpl implements Workservice {
+
+    private static Logger logger = LoggerFactory.getLogger(testController.class);
 
     @Autowired
     RepositoryService repositoryService;
@@ -43,9 +50,9 @@ public class WorkserviceImpl implements Workservice {
 
         //部署流程
         Deployment deployment = repositoryService.createDeployment() //创建一个部署的构造器
-                .addClasspathResource("processes/first.bpmn") //从类路径中添加资源
-                .name("工单流程") //设置部署的名称
-                .category("办公类别") //设置部署的类别
+                .addClasspathResource("processes/ResumeApplyProcess.bpmn") //从类路径中添加资源
+                .name("工单流程11") //设置部署的名称
+                .category("办公类别11") //设置部署的类别
                 .deploy();
         System.out.println("部署ID:"+deployment.getId());
         System.out.println("部署名称"+deployment.getName());
@@ -53,7 +60,7 @@ public class WorkserviceImpl implements Workservice {
 
     @Override
     public void runProcess() {
-        String processDefiKey = "myProcess_1";
+        String processDefiKey = "ResumeApplyProcess";
 
         //获取流程实例
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefiKey);
@@ -153,6 +160,23 @@ public class WorkserviceImpl implements Workservice {
                 System.out.println("历史流程实例任务名称：" +historicTaskInstance.getName());
                 System.out.println("历史流程实例任务处理人："+historicTaskInstance.getAssignee());
             }
+        }
+    }
+
+    @Override
+    public void deployProcessDefinition(InputStream zipBpmFileInputStream, String deploymentName, String tenantId) {
+        try {
+            logger.debug("deployProcessDefine, deploymentName: {}, tenantId: {}.", deploymentName, tenantId);
+            // 发布新版本
+            Deployment deployment = repositoryService.createDeployment()
+                    .addZipInputStream(new ZipInputStream(zipBpmFileInputStream)) //
+                    .name(deploymentName)
+                    .tenantId(tenantId)
+                    .deploy();
+            ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId());
+            System.out.println(processDefinitionQuery.list().size());
+        } catch (Exception e) {
+            logger.error("deployProcessDefine failed.", e);
         }
     }
 

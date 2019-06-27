@@ -3,8 +3,14 @@ package com.example.activiti.controller;
 import com.example.activiti.service.Workservice;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -16,9 +22,25 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Api(tags = "activiti")
 public class testController {
+
+    private static Logger logger = LoggerFactory.getLogger(testController.class);
     @Autowired
     Workservice workservice;
 
+
+    @PostMapping(value = "/deployments", consumes = "multipart/form-data", produces = "application/json;charset=utf-8")
+    public void deployProcessDefinition(@RequestParam("file") MultipartFile zipBpmFile,
+                                        @RequestParam("deploymentName") String deploymentName,
+                                        @RequestParam("tenantId") String tenantId, HttpServletResponse httpServletResponse){
+        try {
+            logger.debug("deployProcessDefinition, deploymentName: {}, tenantId: {}.", deploymentName, tenantId);
+            workservice.deployProcessDefinition(zipBpmFile.getInputStream(), deploymentName.trim(), tenantId.trim());
+        } catch (Exception e) {
+            logger.error("deployProcessDefinition failed.", e);
+            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+
+    }
     @GetMapping("/deploy")
     @ApiOperation(value = "流程部署")
     void deploy() {

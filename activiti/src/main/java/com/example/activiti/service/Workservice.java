@@ -1,5 +1,7 @@
 package com.example.activiti.service;
 
+import java.io.InputStream;
+
 /**
  * @Author: Kayla, Ye
  * @Description:
@@ -32,4 +34,6 @@ public interface Workservice {
 
     //9、查询流程实例历史执行信息
     void queryHistoryTask(String processInstanceId);
+
+    void deployProcessDefinition(InputStream inputStream, String trim, String trim1);
 }

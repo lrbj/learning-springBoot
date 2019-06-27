@@ -28,7 +28,7 @@ public interface AuditService {
 
 
 
-   AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId);
+   AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId) throws Exception;
 
    List<AuditGroupData> queryAuditRequestByGroupAndMonth(Integer month, Integer year);
 }

@@ -53,9 +53,16 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId) {
-        Preconditions.checkNotNull(applicationId, "applicationId must not be null.");
-        return auditMapper.queryAuditRequestDetailsByApplicationId(applicationId);
+    public AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId) throws Exception {
+         if(applicationId == null){
+             try {
+                 return auditMapper.queryAuditRequestDetailsByApplicationId(applicationId);
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 throw  new Exception();
+             }
+         }
+        return null;
     }
 
     @Override
