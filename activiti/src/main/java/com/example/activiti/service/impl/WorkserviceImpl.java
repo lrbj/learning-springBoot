@@ -1,6 +1,8 @@
 package com.example.activiti.service.impl;
 
 import com.example.activiti.controller.testController;
+import com.example.activiti.listener.ApproveResultEnum;
+import com.example.activiti.listener.TaskComment;
 import com.example.activiti.service.Workservice;
 import com.example.activiti.vo.TaskVo;
 import org.activiti.engine.*;
@@ -57,7 +59,7 @@ public class WorkserviceImpl implements Workservice {
 
         //部署流程
         Deployment deployment = repositoryService.createDeployment() //创建一个部署的构造器
-                .addClasspathResource("processes/ResumeApplyProcess.bpmn") //从类路径中添加资源
+                .addClasspathResource("processes/interruptApplyProcess.bpmn") //从类路径中添加资源
                 .name("工单流程11") //设置部署的名称
                 .category("办公类别11") //设置部署的类别
                 .deploy();
@@ -66,11 +68,12 @@ public class WorkserviceImpl implements Workservice {
     }
 
     @Override
-    public void runProcess() {
-        String processDefiKey = "ResumeApplyProcess";
+    public void runProcess(String  procsessKey) {
+        //String processDefiKey = "ResumeApplyProcess";
+
 
         //获取流程实例
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefiKey);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procsessKey);
         System.out.println("流程执行对象的id:"+processInstance.getId());
         System.out.println("流程实例id:"+processInstance.getProcessInstanceId());//流程实例id
         System.out.println("流程定义id:"+processInstance.getProcessDefinitionId());//输出流程定义的id
@@ -96,12 +99,54 @@ public class WorkserviceImpl implements Workservice {
 
         Map<String,Object> var = new HashMap<>();
         var.put("approvers1",data.getApprovers1());
+        var.put("approvers2",data.getApprovers2());
         var.put("comment",data.getComment());
         var.put("result",data.getResult());
      //   var.put("taskComments", data.getTaskComments());
        // formService.saveFormData(taskId,var);
-        taskService.complete(taskId,var);
-        System.out.println("当前任务已执行完");
+
+                    //退件-->直接结束流程：只删除运行中的实例，历史实例保存记录
+            Integer result = data.getResult();
+            logger.debug("result:{}", result);
+            if(ApproveResultEnum.REFUSE.getId().equals(result)){
+                HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
+                        .taskId(taskId)
+                        .singleResult();
+                logger.debug("deleteProcessInstance:ProcessInstanceId{}", task.getProcessInstanceId());
+                Map<String, TaskComment> taskComments = (Map<String, TaskComment>) taskService.getTaskComments(taskId);
+                TaskComment taskComment = new TaskComment();
+                taskComment.setAssignee(task.getAssignee());
+                taskComment.setResult(ApproveResultEnum.idOf(result).getCode());
+                taskComment.setComment(data.getComment());
+                taskComments.put(taskId,taskComment);
+
+                Map<String, Object> variables;
+                variables = taskComments.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> (Object) entry.getValue()));
+                taskService.setVariables(taskId, variables);
+                //taskService.setVariable(taskId,"taskComments", variables);
+                runtimeService.deleteProcessInstance(task.getProcessInstanceId(), data.getComment());
+//                Map<String, TaskComment> taskComments = (Map<String, TaskComment>)task.getProcessVariables().get("taskComments");
+//                Integer result1 = data.getResult();
+//
+//                //添加每个task的审批历史
+//                TaskComment taskComment = new TaskComment();
+//                taskComment.setAssignee(task.getAssignee());
+//                taskComment.setResult(ApproveResultEnum.idOf(result).getCode());
+//                taskComment.setComment(data.getComment());
+//                //add it to map
+//                taskComments.put( taskId, taskComment);
+//                //update taskComments
+                HistoricProcessInstance process = historyService.createHistoricProcessInstanceQuery()
+                        .processInstanceId(task.getProcessInstanceId())
+                        .includeProcessVariables()
+                        .singleResult();
+
+                System.out.println("此时获取的变量信息："+ process.getProcessVariables());
+            }else{
+                taskService.complete(taskId,var);
+
+                System.out.println("当前任务已执行完");
+            }
     }
 
     @Override

@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1551840432844" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="applyProcess" isClosed="false" isExecutable="true" name="applyProcess" processType="None">
+    <startEvent activiti:initiator="applyuser" id="start" name="StartEvent"/>
+    <userTask activiti:assignee="${applyuser}" activiti:exclusive="true" activiti:formKey="applyForm" id="applyTask" name="applyTask">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="_4" name="reset" sourceRef="start" targetRef="applyTask">
+	<extensionElements>
+        <activiti:executionListener class="com.example.activiti.listener.ProcessInstanceListener" event="end"/>
+      </extensionElements>  
+ </sequenceFlow>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask1" name="approveTask1">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers1" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_6" name="ExclusiveGateway"/>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask2" name="approveTask2">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers2" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <sequenceFlow id="_9" sourceRef="approveTask1" targetRef="_6"/>
+    <sequenceFlow id="_10" name="pass1" sourceRef="_6" targetRef="approveTask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask activiti:assignee="${applyuser}" activiti:exclusive="true" activiti:formKey="applyForm" id="reapplyTask" name="reapplyTask">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="_12" name="return1" sourceRef="_6" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_13" name="reset" sourceRef="reapplyTask" targetRef="approveTask1">
+      <extensionElements>
+        <activiti:executionListener class="com.example.activiti.listener.ProcessInstanceListener" event="end"/>
+      </extensionElements>
+    </sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_14" name="ExclusiveGateway"/>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask3" name="approveTask3">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers3" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_16" name="ExclusiveGateway"/>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask4" name="approveTask4">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers4" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_18" name="ExclusiveGateway"/>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask5" name="approveTask5">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers5" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_20" name="ExclusiveGateway"/>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask6" name="approveTask6">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers6" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_22" name="ExclusiveGateway"/>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask8" name="approveTask8">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers8" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <userTask activiti:assignee="${approver}" activiti:exclusive="true" id="approveTask7" name="approveTask7">
+      <extensionElements>
+        <activiti:taskListener delegateExpression="${approveListener}" event="complete"/>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics activiti:collection="approvers7" activiti:elementVariable="approver" isSequential="false"/>
+    </userTask>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_25" name="ExclusiveGateway"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_26" name="ExclusiveGateway"/>
+    <endEvent id="end" name="EndEvent"/>
+    <sequenceFlow id="_28" sourceRef="approveTask2" targetRef="_14"/>
+    <sequenceFlow id="_29" name="pass2" sourceRef="_14" targetRef="approveTask3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_30" name="return2" sourceRef="_14" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_31" sourceRef="approveTask3" targetRef="_16"/>
+    <sequenceFlow id="_32" name="pass3" sourceRef="_16" targetRef="approveTask4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_33" name="return3" sourceRef="_16" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_34" sourceRef="approveTask4" targetRef="_18"/>
+    <sequenceFlow id="_35" name="pass4" sourceRef="_18" targetRef="approveTask5">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_36" name="return4" sourceRef="_18" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_37" sourceRef="approveTask5" targetRef="_20"/>
+    <sequenceFlow id="_38" name="pass5" sourceRef="_20" targetRef="approveTask6">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_39" sourceRef="approveTask6" targetRef="_22"/>
+    <sequenceFlow id="_40" name="pass6" sourceRef="_22" targetRef="approveTask7">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_41" sourceRef="approveTask7" targetRef="_25"/>
+    <sequenceFlow id="_42" name="pass7" sourceRef="_25" targetRef="approveTask8">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_43" sourceRef="approveTask8" targetRef="_26"/>
+    <sequenceFlow id="_44" name="pass8" sourceRef="_26" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_45" name="return5" sourceRef="_20" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_46" name="return6" sourceRef="_22" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_47" name="reutrn7" sourceRef="_25" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_48" name="return8" sourceRef="_26" targetRef="reapplyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_2" name="ExclusiveGateway"/>
+    <sequenceFlow id="_3" sourceRef="applyTask" targetRef="_2"/>
+    <sequenceFlow id="_5" name="pass0" sourceRef="_2" targetRef="approveTask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected == 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_7" name="return0" sourceRef="_2" targetRef="approveTask6">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejected < 0}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="applyProcess">
+      <bpmndi:BPMNShape bpmnElement="start" id="Shape-start">
+        <omgdc:Bounds height="32.0" width="32.0" x="210.0" y="-45.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="applyTask" id="Shape-applyTask">
+        <omgdc:Bounds height="55.0" width="85.0" x="175.0" y="70.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask1" id="Shape-approveTask1">
+        <omgdc:Bounds height="55.0" width="85.0" x="190.0" y="215.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_6" id="Shape-_6" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="215.0" y="310.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask2" id="Shape-approveTask2">
+        <omgdc:Bounds height="55.0" width="85.0" x="350.0" y="300.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="reapplyTask" id="Shape-reapplyTask">
+        <omgdc:Bounds height="55.0" width="85.0" x="10.0" y="215.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_14" id="Shape-_14" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="375.0" y="390.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask3" id="Shape-approveTask3">
+        <omgdc:Bounds height="55.0" width="85.0" x="505.0" y="380.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_16" id="Shape-_16" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="535.0" y="490.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask4" id="Shape-approveTask4">
+        <omgdc:Bounds height="55.0" width="85.0" x="645.0" y="480.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_18" id="Shape-_18" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="675.0" y="590.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask5" id="Shape-approveTask5">
+        <omgdc:Bounds height="55.0" width="85.0" x="795.0" y="580.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_20" id="Shape-_20" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="820.0" y="675.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask6" id="Shape-approveTask6">
+        <omgdc:Bounds height="55.0" width="85.0" x="955.0" y="665.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_22" id="Shape-_22" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="985.0" y="765.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask8" id="Shape-approveTask8">
+        <omgdc:Bounds height="55.0" width="85.0" x="1325.0" y="855.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask7" id="Shape-approveTask7">
+        <omgdc:Bounds height="55.0" width="85.0" x="1140.0" y="755.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_25" id="Shape-_25" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="1170.0" y="865.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_26" id="Shape-_26" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="1350.0" y="945.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="Shape-end">
+        <omgdc:Bounds height="32.0" width="32.0" x="1350.0" y="1050.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" id="Shape-_2" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="210.0" y="110.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_35" id="BPMNEdge__35" sourceElement="_18" targetElement="approveTask5">
+        <omgdi:waypoint x="707.0" y="606.0"/>
+        <omgdi:waypoint x="795.0" y="607.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_34" id="BPMNEdge__34" sourceElement="approveTask4" targetElement="_18">
+        <omgdi:waypoint x="691.0" y="535.0"/>
+        <omgdi:waypoint x="691.0" y="590.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_37" id="BPMNEdge__37" sourceElement="approveTask5" targetElement="_20">
+        <omgdi:waypoint x="836.0" y="635.0"/>
+        <omgdi:waypoint x="836.0" y="675.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_36" id="BPMNEdge__36" sourceElement="_18" targetElement="reapplyTask">
+        <omgdi:waypoint x="675.0" y="606.0"/>
+        <omgdi:waypoint x="55.0" y="450.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_39" id="BPMNEdge__39" sourceElement="approveTask6" targetElement="_22">
+        <omgdi:waypoint x="1001.0" y="720.0"/>
+        <omgdi:waypoint x="1001.0" y="765.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_38" id="BPMNEdge__38" sourceElement="_20" targetElement="approveTask6">
+        <omgdi:waypoint x="852.0" y="691.0"/>
+        <omgdi:waypoint x="955.0" y="692.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_40" id="BPMNEdge__40" sourceElement="_22" targetElement="approveTask7">
+        <omgdi:waypoint x="1017.0" y="781.0"/>
+        <omgdi:waypoint x="1140.0" y="782.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_42" id="BPMNEdge__42" sourceElement="_25" targetElement="approveTask8">
+        <omgdi:waypoint x="1202.0" y="881.0"/>
+        <omgdi:waypoint x="1325.0" y="882.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_41" id="BPMNEdge__41" sourceElement="approveTask7" targetElement="_25">
+        <omgdi:waypoint x="1186.0" y="810.0"/>
+        <omgdi:waypoint x="1186.0" y="865.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_44" id="BPMNEdge__44" sourceElement="_26" targetElement="end">
+        <omgdi:waypoint x="1366.0" y="977.0"/>
+        <omgdi:waypoint x="1366.0" y="1050.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_43" id="BPMNEdge__43" sourceElement="approveTask8" targetElement="_26">
+        <omgdi:waypoint x="1366.0" y="910.0"/>
+        <omgdi:waypoint x="1366.0" y="945.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_46" id="BPMNEdge__46" sourceElement="_22" targetElement="reapplyTask">
+        <omgdi:waypoint x="985.0" y="781.0"/>
+        <omgdi:waypoint x="55.0" y="530.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_45" id="BPMNEdge__45" sourceElement="_20" targetElement="reapplyTask">
+        <omgdi:waypoint x="820.0" y="691.0"/>
+        <omgdi:waypoint x="55.0" y="520.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_48" id="BPMNEdge__48" sourceElement="_26" targetElement="reapplyTask">
+        <omgdi:waypoint x="1350.0" y="961.0"/>
+        <omgdi:waypoint x="55.0" y="625.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_47" id="BPMNEdge__47" sourceElement="_25" targetElement="reapplyTask">
+        <omgdi:waypoint x="1170.0" y="881.0"/>
+        <omgdi:waypoint x="55.0" y="595.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3" id="BPMNEdge__3" sourceElement="applyTask" targetElement="_2">
+        <omgdi:waypoint x="226.0" y="125.0"/>
+        <omgdi:waypoint x="226.0" y="110.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="start" targetElement="applyTask">
+        <omgdi:waypoint x="226.0" y="-13.0"/>
+        <omgdi:waypoint x="226.0" y="70.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5" id="BPMNEdge__5" sourceElement="_2" targetElement="approveTask1">
+        <omgdi:waypoint x="226.0" y="142.0"/>
+        <omgdi:waypoint x="226.0" y="215.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_7" id="BPMNEdge__7" sourceElement="_2" targetElement="approveTask6">
+        <omgdi:waypoint x="242.0" y="126.0"/>
+        <omgdi:waypoint x="1055.0" y="380.0"/>
+        <omgdi:waypoint x="1040.0" y="692.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_9" id="BPMNEdge__9" sourceElement="approveTask1" targetElement="_6">
+        <omgdi:waypoint x="231.0" y="270.0"/>
+        <omgdi:waypoint x="231.0" y="310.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_10" id="BPMNEdge__10" sourceElement="_6" targetElement="approveTask2">
+        <omgdi:waypoint x="247.0" y="326.0"/>
+        <omgdi:waypoint x="350.0" y="327.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_13" id="BPMNEdge__13" sourceElement="reapplyTask" targetElement="approveTask1">
+        <omgdi:waypoint x="95.0" y="242.5"/>
+        <omgdi:waypoint x="190.0" y="242.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_12" id="BPMNEdge__12" sourceElement="_6" targetElement="reapplyTask">
+        <omgdi:waypoint x="216.0" y="325.0"/>
+        <omgdi:waypoint x="55.0" y="325.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_28" id="BPMNEdge__28" sourceElement="approveTask2" targetElement="_14">
+        <omgdi:waypoint x="391.0" y="355.0"/>
+        <omgdi:waypoint x="391.0" y="390.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_29" id="BPMNEdge__29" sourceElement="_14" targetElement="approveTask3">
+        <omgdi:waypoint x="407.0" y="406.0"/>
+        <omgdi:waypoint x="505.0" y="407.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_31" id="BPMNEdge__31" sourceElement="approveTask3" targetElement="_16">
+        <omgdi:waypoint x="551.0" y="435.0"/>
+        <omgdi:waypoint x="551.0" y="490.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_30" id="BPMNEdge__30" sourceElement="_14" targetElement="reapplyTask">
+        <omgdi:waypoint x="375.0" y="406.0"/>
+        <omgdi:waypoint x="55.0" y="330.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_33" id="BPMNEdge__33" sourceElement="_16" targetElement="reapplyTask">
+        <omgdi:waypoint x="535.0" y="506.0"/>
+        <omgdi:waypoint x="55.0" y="385.0"/>
+        <omgdi:waypoint x="55.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_32" id="BPMNEdge__32" sourceElement="_16" targetElement="approveTask4">
+        <omgdi:waypoint x="567.0" y="506.0"/>
+        <omgdi:waypoint x="645.0" y="507.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

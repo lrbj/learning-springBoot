@@ -11,7 +11,8 @@ import java.util.Optional;
 public enum ApproveResultEnum {
         REFUSE(0, "退件"),
         RETURN(1, "回退"),
-        AGREE(2, "同意");
+        AGREE(2, "同意"),
+        JUMP(3, "跳转");
 
         private Integer id;
         private String code;

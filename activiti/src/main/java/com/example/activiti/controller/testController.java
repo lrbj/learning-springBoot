@@ -50,8 +50,8 @@ public class testController {
     }
     @PostMapping("/run")
     @ApiOperation(value = "启动流程")
-    void runProcess() {
-        workservice.runProcess();
+    void runProcess(@RequestParam(value = "processKey", required = true) String processKey) {
+        workservice.runProcess(processKey);
     }
 
     @GetMapping("/query")

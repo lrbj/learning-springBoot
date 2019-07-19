@@ -15,7 +15,7 @@ public interface Workservice {
     void deploy();
 
     //2、运行流程
-    void runProcess();
+    void runProcess(String processKey);
 
     //3、查询代理人的任务情况
     void queryTask(String assignee);
