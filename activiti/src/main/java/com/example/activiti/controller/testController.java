@@ -33,7 +33,7 @@ public class testController {
     @PostMapping(value = "/deployments", consumes = "multipart/form-data", produces = "application/json;charset=utf-8")
     public void deployProcessDefinition(@RequestParam("file") MultipartFile zipBpmFile,
                                         @RequestParam("deploymentName") String deploymentName,
-                                        @RequestParam("tenantId") String tenantId, HttpServletResponse httpServletResponse){
+                                        @RequestParam("tenantId") String tenantId, HttpServletResponse httpServletResponse) {
         try {
             logger.debug("deployProcessDefinition, deploymentName: {}, tenantId: {}.", deploymentName, tenantId);
             workservice.deployProcessDefinition(zipBpmFile.getInputStream(), deploymentName.trim(), tenantId.trim());
@@ -43,11 +43,13 @@ public class testController {
         }
 
     }
+
     @GetMapping("/deploy")
     @ApiOperation(value = "流程部署")
     void deploy() {
         workservice.deploy();
     }
+
     @PostMapping("/run")
     @ApiOperation(value = "启动流程")
     void runProcess(@RequestParam(value = "processKey", required = true) String processKey) {
@@ -56,19 +58,27 @@ public class testController {
 
     @GetMapping("/query")
     @ApiOperation(value = "查询任务")
-    void queryTask(@RequestParam("assginName")String assginName) {
+    void queryTask(@RequestParam("assginName") String assginName) {
         workservice.queryTask(assginName);
     }
 
     @PostMapping("/complete")
     @ApiOperation(value = "执行任务")
-    void completeTask(@RequestParam("taskId")String taskId, @RequestBody TaskVo taskVo) {
-        workservice.complieTask(taskId, taskVo);
+    Object completeTask(@RequestParam("taskId") String taskId, @RequestBody TaskVo taskVo) {
+        return workservice.complieTask(taskId, taskVo);
     }
+
+
+    @GetMapping("/queryTask")
+    @ApiOperation(value = "查看历史任务")
+    void completeTask(@RequestParam("processInstanceId") String processInstanceId) {
+        workservice.queryHistoryTask(processInstanceId);
+    }
+
 
     @GetMapping("/queryProcess")
     @ApiOperation(value = "查询流程定义")
-    void queryProcessDefination(@RequestParam("processDefikey")String  processDefikey){
+    void queryProcessDefination(@RequestParam("processDefikey") String processDefikey) {
         workservice.queryProcessDefination(processDefikey);
         workservice.queryProcessInstanceState();
 
@@ -76,14 +86,14 @@ public class testController {
 
     @DeleteMapping("/processDefi")
     @ApiOperation(value = "删除流程部署")
-    void deleteProcessDefi(@RequestParam("deploymentId")String deploymentId){
+    void deleteProcessDefi(@RequestParam("deploymentId") String deploymentId) {
         workservice.deleteProcessDefi(deploymentId);
     }
 
     @DeleteMapping("/processInstance")
     @ApiOperation(value = "删除正常运行的流程")
-    void deleteProcessInstance(@RequestParam("processInstanceId")String processInstanceId, @RequestParam("deleteReason") String deleteReason){
-       workservice.deleteProcessInstance(processInstanceId, deleteReason);
+    void deleteProcessInstance(@RequestParam("processInstanceId") String processInstanceId, @RequestParam("deleteReason") String deleteReason) {
+        workservice.deleteProcessInstance(processInstanceId, deleteReason);
     }
 
 }

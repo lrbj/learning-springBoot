@@ -43,7 +43,7 @@ public class PeopleController {
     @GetMapping("/{id}")
     @ApiOperation(value = "通过Id查找People") //方法描述
     public ResponseObject findPeople(@PathVariable("id") Long id) {
-        return ResponseObject.success( peopleService.findById(id));
+        return ResponseObject.success(peopleService.findById(id));
     }
 
 
@@ -51,7 +51,7 @@ public class PeopleController {
     @JpaPage
     @ApiOperation(value = "分页查询")
     public ResponseObject<Pagination<People>> findPage() {
-        Pagination<People> pagination  = peopleService.findPage(PageUtil.getSpecification());
+        Pagination<People> pagination = peopleService.findPage(PageUtil.getSpecification());
         return ResponseObject.success(pagination);
     }
 }

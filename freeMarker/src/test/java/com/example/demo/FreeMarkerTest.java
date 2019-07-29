@@ -20,7 +20,7 @@ public class FreeMarkerTest {
     private static final String CLASS_PATH = "D:\\learn\\javaweb\\freeMarker\\demo\\src\\main\\java\\com\\example\\demo";
 
     @Test
-    public  void testFreemarker() throws Exception {
+    public void testFreemarker() throws Exception {
         //1、创建配置实例
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_20);
 
@@ -28,16 +28,16 @@ public class FreeMarkerTest {
         //2、获取模板路径
         configuration.setDirectoryForTemplateLoading(new File(TEMPLATE_PATH));
         //3、创建数据模型
-        Map<String,String> map = new HashMap<>();
-        map.put("classPath","com.example.demo");
-        map.put("className","AutoCodeDemo" );
-        map.put("message","hell world");
+        Map<String, String> map = new HashMap<>();
+        map.put("classPath", "com.example.demo");
+        map.put("className", "AutoCodeDemo");
+        map.put("message", "hell world");
 
         //4、加载模板文件
         Template template = configuration.getTemplate("hello.ftl");
 
         //5、生成数据
-        File file = new File(CLASS_PATH+"\\"+"AutoCodeDemo.java");
+        File file = new File(CLASS_PATH + "\\" + "AutoCodeDemo.java");
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 
         //6、输出文件

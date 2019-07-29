@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Description:
  * @Date:Created in 3:24 PM 11/22/2018
  */
-public interface PeopleRepository extends JpaRepository<People, Long>,JpaSpecificationExecutor<People> {
+public interface PeopleRepository extends JpaRepository<People, Long>, JpaSpecificationExecutor<People> {
 }

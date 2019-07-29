@@ -15,12 +15,12 @@ import java.util.List;
  * @Date:Created in 10:33 AM 11/27/2018
  */
 public interface CsvOperaService {
-  void readCsvFile(MultipartFile file ) throws BusinessException;
+    void readCsvFile(MultipartFile file) throws BusinessException;
 
-  //按照指定条件读取
-  List<String> readCsvFile(MultipartFile file, ReadFileConditon readFileConditon) throws BusinessException, IOException;
+    //按照指定条件读取
+    List<String> readCsvFile(MultipartFile file, ReadFileConditon readFileConditon) throws BusinessException, IOException;
 
-  boolean checkCsvLineData(String line,int columnNum);
+    boolean checkCsvLineData(String line, int columnNum);
 
-  List<String>  readCsvData(BufferedReader bufferedReader, int columnNum) throws IOException;
+    List<String> readCsvData(BufferedReader bufferedReader, int columnNum) throws IOException;
 }

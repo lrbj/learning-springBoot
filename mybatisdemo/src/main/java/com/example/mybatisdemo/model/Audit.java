@@ -16,7 +16,7 @@ public class Audit {
     /**
      * 申请编号
      */
-    private String  applicationId;
+    private String applicationId;
 
 
     /**
@@ -25,7 +25,7 @@ public class Audit {
     private String applyUserId;
 
     /**
-     *  创建时间
+     * 创建时间
      */
     private Timestamp createTime;
 
@@ -111,19 +111,15 @@ public class Audit {
     }
 
     /**
-
-     *  计划开工时间
+     * 计划开工时间
      */
-    private  Timestamp planStartTime;
+    private Timestamp planStartTime;
 
 
     /**
      * 计划竣工时间
      */
-    private  Timestamp planEndTime;
-
-
-
+    private Timestamp planEndTime;
 
 
 }

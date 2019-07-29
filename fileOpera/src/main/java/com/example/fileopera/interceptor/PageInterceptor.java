@@ -25,11 +25,12 @@ import java.util.HashMap;
 public class PageInterceptor implements HandlerInterceptor {
 
     Logger logger = LoggerFactory.getLogger(PageInterceptor.class);
+
     //在控制器执行前调用: 只拦截GET 以及 含有注解@JpaPage
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(!"GET".equals(request.getMethod())){
-           return true;
+        if (!"GET".equals(request.getMethod())) {
+            return true;
         }
 
         HandlerMethod method;
@@ -42,14 +43,14 @@ public class PageInterceptor implements HandlerInterceptor {
         }
 
 
-        if(null == method.getMethodAnnotation(JpaPage.class)){
+        if (null == method.getMethodAnnotation(JpaPage.class)) {
             return true;
         }
 
         //拦截提取请求参数
         PageSearch pageSearch = new PageSearch();
         //当参数无时，默认为分页查询
-        pageSearch.setOpsType(request.getParameter("opsType")== null ? PageOperator.LIST:PageOperator.valueOf(request.getParameter("opsType")));
+        pageSearch.setOpsType(request.getParameter("opsType") == null ? PageOperator.LIST : PageOperator.valueOf(request.getParameter("opsType")));
 
         // 分页操作
         if (PageOperator.LIST.equals(pageSearch.getOpsType())) {

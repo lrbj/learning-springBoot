@@ -31,7 +31,7 @@ public class CsvOperaController {
 
     @PostMapping("/upload")
     @ApiOperation(value = "上传csv文件")
-    public ResponseObject upLoadCsv(@RequestParam("file") MultipartFile file)throws Exception{
+    public ResponseObject upLoadCsv(@RequestParam("file") MultipartFile file) throws Exception {
 
         /*String name = file.getOriginalFilename();
         String path = "";
@@ -44,12 +44,12 @@ public class CsvOperaController {
         readFileConditon.setColumnNum(10);
         readFileConditon.setSheetIndex(2);
         readFileConditon.setIgonreRowNum(1);
-        List<String> stringList = csvOperaService.readCsvFile(file,readFileConditon);
-        for(String str:stringList){
+        List<String> stringList = csvOperaService.readCsvFile(file, readFileConditon);
+        for (String str : stringList) {
             System.out.println(str);
         }
 
-        return  ResponseObject.success(null);
+        return ResponseObject.success(null);
     }
 
 }

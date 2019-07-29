@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+
 import com.example.mybatisdemo.model.Process;
 
 /**
@@ -20,11 +21,11 @@ public class ProcessController {
     ProcessService processService;
 
     @PostMapping("/add")
-    @ApiOperation(value="addProcess", notes="添加数据")
-    public void  addProcess(@RequestBody Process process){
+    @ApiOperation(value = "addProcess", notes = "添加数据")
+    public void addProcess(@RequestBody Process process) {
         Long time = System.currentTimeMillis();
 
-        Timestamp   now = new Timestamp(time);
+        Timestamp now = new Timestamp(time);
         process.setCreateTime(now);
         process.setLastApproveTime(now);
         process.setLastAuditTime(now);
@@ -37,8 +38,8 @@ public class ProcessController {
     }
 
     @GetMapping
-    @ApiOperation(value="find", notes="查找全部数据")
-    public Process find(@RequestParam("processInstanceId") String processInstanceId){
+    @ApiOperation(value = "find", notes = "查找全部数据")
+    public Process find(@RequestParam("processInstanceId") String processInstanceId) {
 
         return processService.selectByProcessInstanceId(processInstanceId);
     }

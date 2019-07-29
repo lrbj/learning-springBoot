@@ -14,9 +14,11 @@ import java.util.Map;
  * @Date:Created in 10:32 AM 11/27/2018
  */
 public class FileUtil {
-    /** 将数据写入文件中
+    /**
+     * 将数据写入文件中
+     *
      * @param fileData
-     * @param fileDir 文件目录
+     * @param fileDir  文件目录
      * @param fileName 文件名
      * @return
      * @throws Exception
@@ -30,10 +32,9 @@ public class FileUtil {
         String path = fileDir + fileName;
         FileOutputStream out = new FileOutputStream(path);
         try {
-            if(fileData != null ){
+            if (fileData != null) {
                 out.write(fileData);
-            }
-            else{
+            } else {
                 out.write(0x00);
             }
             out.flush();
@@ -49,25 +50,26 @@ public class FileUtil {
 
     /**
      * 判断文件路径的是文件目录还是文件，如果不存在则创建
+     *
      * @param filePath
      * @return
      */
-    public static int filePathType(String filePath){
+    public static int filePathType(String filePath) {
         File file = new File(filePath);
         int filePathType = 0;
-        if(file.isDirectory()){
+        if (file.isDirectory()) {
             filePathType = FileConstant.IS_DIRECTORY;
-        }else if(file.isFile()){
+        } else if (file.isFile()) {
             filePathType = FileConstant.IS_FILE;
-        }else{
+        } else {
             return FileConstant.ERR_FILE;//错误
         }
 
-        return  filePathType;
+        return filePathType;
 
     }
 
-    public static ResponseObject getErrResult(int[] result){
+    public static ResponseObject getErrResult(int[] result) {
 
         if (result[0] != FileConstant.ERR_SUCCESS) {
             Object resultObj = new Object();

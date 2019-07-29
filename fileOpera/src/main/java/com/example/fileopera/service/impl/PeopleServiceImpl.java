@@ -39,7 +39,7 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public Pagination<People> findPage(Specification<People> specification) {
-        Page<People> page =  peopleRepository.findAll(specification, PageUtil.getPageRequest());
-        return new Pagination<People>((int)page.getTotalElements(), page.getContent());
+        Page<People> page = peopleRepository.findAll(specification, PageUtil.getPageRequest());
+        return new Pagination<People>((int) page.getTotalElements(), page.getContent());
     }
 }

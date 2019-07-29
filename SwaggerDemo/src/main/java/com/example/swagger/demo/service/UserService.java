@@ -20,21 +20,21 @@ public class UserService {
     UserRepository userRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public int  saveListUser (List<User> userList){
+    public int saveListUser(List<User> userList) {
         int nRet = -1;
-        for(User user: userList ){
+        for (User user : userList) {
             save(user);
         }
         nRet = 0;
 
-        return  nRet;
+        return nRet;
     }
 
-    public void save(User user){
+    public void save(User user) {
         userRepository.save(user);
     }
 
-    public  List<User> findAll(){
-       return userRepository.findAll();
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

@@ -22,17 +22,17 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/add")
-    @ApiOperation(value="addUser", notes="添加数据")
-    public int  addUser(@RequestBody List<User> userList){
-        int nRet= -2;
+    @ApiOperation(value = "addUser", notes = "添加数据")
+    public int addUser(@RequestBody List<User> userList) {
+        int nRet = -2;
         nRet = userService.saveListUser(userList);
-        System.out.println("nRet = "+ nRet);
-        return  nRet;
+        System.out.println("nRet = " + nRet);
+        return nRet;
     }
 
     @PostMapping("/findAll")
-    @ApiOperation(value="findAll", notes="查找全部数据")
-    public List<User> findAll(){
-       return userService.findAll();
+    @ApiOperation(value = "findAll", notes = "查找全部数据")
+    public List<User> findAll() {
+        return userService.findAll();
     }
 }

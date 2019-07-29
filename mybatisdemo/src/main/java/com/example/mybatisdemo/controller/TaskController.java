@@ -22,20 +22,20 @@ public class TaskController {
     TaskService taskService;
 
     @PostMapping("/add")
-    @ApiOperation(value="addTask", notes="添加数据")
-    public void  addTask(@RequestBody Task task){
+    @ApiOperation(value = "addTask", notes = "添加数据")
+    public void addTask(@RequestBody Task task) {
         Long time = System.currentTimeMillis();
         Timestamp timestamp = new Timestamp(time);
 
         task.setStartTime(timestamp);
         task.setEndTime(timestamp);
-       taskService.insert(task);
+        taskService.insert(task);
     }
 
-   @GetMapping("")
-    @ApiOperation(value="find", notes="查找全部数据")
-    public List<TaskDto> find(@RequestParam("processInstanceId") String processInstanceId){
+    @GetMapping("")
+    @ApiOperation(value = "find", notes = "查找全部数据")
+    public List<TaskDto> find(@RequestParam("processInstanceId") String processInstanceId) {
 
-       return taskService.queryTasksByProcessInstanceId(processInstanceId);
+        return taskService.queryTasksByProcessInstanceId(processInstanceId);
     }
 }

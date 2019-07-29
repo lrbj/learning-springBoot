@@ -33,7 +33,7 @@ public class ExcelOperaController {
 
     @PostMapping("/upload")
     @ApiOperation(value = "上传excel文件")
-    public ResponseObject upLoadExcel(@RequestParam("file") MultipartFile file)throws Exception{
+    public ResponseObject upLoadExcel(@RequestParam("file") MultipartFile file) throws Exception {
 
         //基本文件读取
         //excelOperaService.readExcel(file);
@@ -42,17 +42,17 @@ public class ExcelOperaController {
         readFileConditon.setSheetIndex(2);
         readFileConditon.setIgonreRowNum(1);
         List<String> stringList = excelOperaService.readExcel(file, readFileConditon);
-        for(String str: stringList){
-            System.out.println("str="+ str);
+        for (String str : stringList) {
+            System.out.println("str=" + str);
         }
 
-        return  ResponseObject.success(null);
+        return ResponseObject.success(null);
     }
 
     @PostMapping("/generate")
     @ApiOperation(value = "生成excel文件")
-    public  ResponseObject createExcel( @RequestBody List<People> peopleList) throws Exception {
-        String filename = "temp"+ UUID.randomUUID()+".xlsx";
+    public ResponseObject createExcel(@RequestBody List<People> peopleList) throws Exception {
+        String filename = "temp" + UUID.randomUUID() + ".xlsx";
         List<String> titleList = new ArrayList<>();
         titleList.add("姓名");
         titleList.add("电话");
@@ -63,7 +63,7 @@ public class ExcelOperaController {
         data.setTitle(titleList);
         data.setFileName(filename);
         List<List<Object>> rowData = new ArrayList<>();
-        for(People people: peopleList){
+        for (People people : peopleList) {
             List<Object> row = new ArrayList<>();
             row.add(people.getName());
             row.add(people.getPhone());
@@ -71,7 +71,7 @@ public class ExcelOperaController {
             rowData.add(row);
         }
         data.setRows(rowData);
-        excelOperaService.generateExcel(data,FILEDIR );
+        excelOperaService.generateExcel(data, FILEDIR);
         return ResponseObject.success(null);
     }
 

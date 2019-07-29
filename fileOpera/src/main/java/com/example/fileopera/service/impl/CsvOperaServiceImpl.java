@@ -40,10 +40,10 @@ public class CsvOperaServiceImpl implements CsvOperaService {
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), FileConstant.CODE_FORMAT));
-            String line ="";
+            String line = "";
             int rowNum = 0;
-            while ((line = bufferedReader.readLine()) != null){
-                System.out.println("line"+rowNum+": " + line);
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println("line" + rowNum + ": " + line);
                 rowNum++;
             }
         } catch (IOException e) {
@@ -67,7 +67,7 @@ public class CsvOperaServiceImpl implements CsvOperaService {
 
         //1、对于第一行的判断
         if (checkCsvLineData(bReader.readLine(), readFileConditon.getColumnNum())) {
-            throw  new BusinessException(ErrorEnum.IMPORT_DATA_CLUMMUN_ERR.getCode(), ErrorEnum.IMPORT_DATA_CLUMMUN_ERR.getMsg());
+            throw new BusinessException(ErrorEnum.IMPORT_DATA_CLUMMUN_ERR.getCode(), ErrorEnum.IMPORT_DATA_CLUMMUN_ERR.getMsg());
         }
 
         //2、不需要读取的行
@@ -78,14 +78,14 @@ public class CsvOperaServiceImpl implements CsvOperaService {
         }
 
         //3、 提取文件中的数据
-        List<String> stringList = readCsvData(bReader,readFileConditon.getColumnNum());
-        return  stringList;
+        List<String> stringList = readCsvData(bReader, readFileConditon.getColumnNum());
+        return stringList;
     }
 
     @Override
     public boolean checkCsvLineData(String line, int columnNum) {
-        if (("" == line.trim ()) || (null == line)
-                || (line.split (",").length < columnNum)) {
+        if (("" == line.trim()) || (null == line)
+                || (line.split(",").length < columnNum)) {
             return true;
         }
 
@@ -98,7 +98,7 @@ public class CsvOperaServiceImpl implements CsvOperaService {
         String line = "";
         while ((line = bReader.readLine()) != null) {
 
-            String[] pills = line.split(",",columnNum);
+            String[] pills = line.split(",", columnNum);
             stringList.add(line);
         }
         return stringList;

@@ -18,8 +18,9 @@ public class AuditController {
     private Timestamp now = new Timestamp(System.currentTimeMillis());
     @Autowired
     private AuditService auditService;
-    private boolean judgeParamIsNull(Object object){
-        if(null == object){
+
+    private boolean judgeParamIsNull(Object object) {
+        if (null == object) {
             logger.error("参数错误");
             return true;
         }
@@ -29,8 +30,8 @@ public class AuditController {
 
     @PostMapping(value = "/audit-request")
     @ApiOperation(value = "插入申请")
-    public void insertAudit(@RequestBody Audit audit){
-        if(judgeParamIsNull(audit)){
+    public void insertAudit(@RequestBody Audit audit) {
+        if (judgeParamIsNull(audit)) {
             return;
         }
         audit.setLastUpdateTime(now);
@@ -38,18 +39,18 @@ public class AuditController {
         audit.setPlanEndTime(now);
         audit.setPlanStartTime(now);
 
-        if(audit.getId() == 0 ){
+        if (audit.getId() == 0) {
             auditService.insert(audit);
-        }else {
+        } else {
             auditService.update(audit);
         }
     }
 
     @GetMapping(value = "/audit-request")
     @ApiOperation(value = "查询")
-    public Object queryAudit(@RequestParam("year") Integer year, @RequestParam("month") Integer month){
-      logger.info("queryAudit:year"+year+": month"+ month);
-      return auditService.queryAuditRequestByGroupAndMonth(month,year);
+    public Object queryAudit(@RequestParam("year") Integer year, @RequestParam("month") Integer month) {
+        logger.info("queryAudit:year" + year + ": month" + month);
+        return auditService.queryAuditRequestByGroupAndMonth(month, year);
     }
 
 }

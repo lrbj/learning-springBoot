@@ -22,8 +22,8 @@ public class ProcessInstanceListener implements ExecutionListener {
         Map<String, Object> variables = delegateExecution.getVariables();
         String processDefinitionId = delegateExecution.getProcessDefinitionId();
         System.out.println("自定义的监听器执行了，监听器到事件：" + eventName);
-       //初始化(重置)rejected
-        delegateExecution.setVariable("rejected",0);
+        //初始化(重置)rejected
+        delegateExecution.setVariable("rejected", 0);
 
         Map<String, TaskComment> taskComments = new HashMap<String, TaskComment>();
         System.out.println("taskComments：" + taskComments);

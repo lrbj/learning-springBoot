@@ -14,6 +14,7 @@ public enum AuditStatusEnum {
         this.id = id;
         this.displayName = displayName;
     }
+
     public int getId() {
         return id;
     }

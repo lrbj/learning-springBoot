@@ -11,8 +11,8 @@ import javax.persistence.*;
  */
 @Entity
 @Data
-@Table(name="people")
-public class People  {
+@Table(name = "people")
+public class People {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
@@ -23,11 +23,11 @@ public class People  {
 
     private String address;//地址
 
-    public  People(){
+    public People() {
 
     }
 
-    public People(String name, String phone, String address){
+    public People(String name, String phone, String address) {
         this.name = name;
         this.phone = phone;
         this.address = address;

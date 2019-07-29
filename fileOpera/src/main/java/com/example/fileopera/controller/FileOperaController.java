@@ -37,7 +37,7 @@ public class FileOperaController {
 
     //获取file.html页面
     @RequestMapping("file")
-    public String file(){
+    public String file() {
         return "/file";
     }
 
@@ -45,8 +45,8 @@ public class FileOperaController {
     @PostMapping("/fileUpload")
     @ResponseBody
     @ApiOperation(value = "上传单个文件")
-    public ResponseObject upload(@RequestParam("file")MultipartFile file) throws  Exception{
-        if(file.isEmpty()) {
+    public ResponseObject upload(@RequestParam("file") MultipartFile file) throws Exception {
+        if (file.isEmpty()) {
             return ResponseObject.fail(ErrorEnum.FILEEMPTY_ERROR);
         }
         //获取文件名
@@ -55,21 +55,21 @@ public class FileOperaController {
 
         //获取文件的后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        System.out.println("后缀名如下："+ suffixName);
+        System.out.println("后缀名如下：" + suffixName);
 
 
         //设置文件存储路径
         String filePath = "./data/";
-        String destPath =  FileUtil.uploadFile(file.getBytes(), filePath, fileName);
+        String destPath = FileUtil.uploadFile(file.getBytes(), filePath, fileName);
         System.out.println("destPath:" + destPath);
 
-        return  ResponseObject.success(null);
+        return ResponseObject.success(null);
 
     }
 
     //获取multifile页面
     @RequestMapping("multifile")
-    public String multifile(){
+    public String multifile() {
         return "/multifile";
     }
 
@@ -78,30 +78,29 @@ public class FileOperaController {
     @ApiOperation(value = "上传多个文件")
     public ResponseObject uploadMore(MultipartHttpServletRequest request) throws Exception {
         List<MultipartFile> fileList = request.getFiles("file");
-        if(fileList.isEmpty()){
-            return  ResponseObject.fail(ErrorEnum.FILEEMPTY_ERROR);
+        if (fileList.isEmpty()) {
+            return ResponseObject.fail(ErrorEnum.FILEEMPTY_ERROR);
         }
         MultipartFile file = null;
         String filePath = "./multifile/";
-        for( int i = 0; i < fileList.size(); i++){
+        for (int i = 0; i < fileList.size(); i++) {
             file = fileList.get(i);
             String fileName = file.getOriginalFilename();
-            String destPath = FileUtil.uploadFile(file.getBytes(),filePath,fileName );
-            System.out.println("destPath:"+destPath);
+            String destPath = FileUtil.uploadFile(file.getBytes(), filePath, fileName);
+            System.out.println("destPath:" + destPath);
         }
 
-        return  ResponseObject.success(null);
+        return ResponseObject.success(null);
     }
-
 
 
     @RequestMapping("/download")
     @ApiOperation(value = "下载文件")
-    public String downLoad(HttpServletResponse response) throws Exception{
-        String filename="debug.log";
-        String filePath = "./data/" ;
+    public String downLoad(HttpServletResponse response) throws Exception {
+        String filename = "debug.log";
+        String filePath = "./data/";
         File file = new File(filePath + "/" + filename);
-        if(file.exists()){ //判断文件父目录是否存在
+        if (file.exists()) { //判断文件父目录是否存在
             response.setContentType("application/force-download");
             response.setHeader("Content-Disposition", "attachment;fileName=" + filename);
 
@@ -116,7 +115,7 @@ public class FileOperaController {
                 fis = new FileInputStream(file);
                 bis = new BufferedInputStream(fis);
                 int i = bis.read(buffer);
-                while(i != -1){
+                while (i != -1) {
                     os.write(buffer);
                     i = bis.read(buffer);
                 }
@@ -124,10 +123,10 @@ public class FileOperaController {
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }finally {
+            } finally {
 
-                    bis.close();
-                    fis.close();
+                bis.close();
+                fis.close();
             }
             System.out.println("----------file download" + filename);
 
@@ -136,11 +135,10 @@ public class FileOperaController {
     }
 
 
-
     @RequestMapping("/exportexcel")
     @ApiOperation(value = "导出文件")
-    public  String createExcel( HttpServletResponse response) throws Exception {
-        String filename = "temp"+ UUID.randomUUID()+".xlsx";
+    public String createExcel(HttpServletResponse response) throws Exception {
+        String filename = "temp" + UUID.randomUUID() + ".xlsx";
         List<String> titleList = new ArrayList<>();
         titleList.add("姓名");
         titleList.add("电话");
@@ -153,11 +151,11 @@ public class FileOperaController {
         List<List<Object>> rowData = new ArrayList<>();
         int ListNum = 7;
         List<People> peopleList = new ArrayList<>(ListNum);
-        for(int i = 0 ; i < ListNum; i++){
+        for (int i = 0; i < ListNum; i++) {
             People people = new People("String", "string", "String");
             peopleList.add(people);
         }
-        for(People people: peopleList){
+        for (People people : peopleList) {
             List<Object> row = new ArrayList<>();
             row.add(people.getName());
             row.add(people.getPhone());

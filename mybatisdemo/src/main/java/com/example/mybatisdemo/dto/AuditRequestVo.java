@@ -18,9 +18,9 @@ public class AuditRequestVo {
 
     // 申请创建时间
 
-     private Timestamp createTime;
+    private Timestamp createTime;
     // 申请最后更新时间
-  //  private Timestamp lastUpdateTime;
+    //  private Timestamp lastUpdateTime;
     // 最后活动的申请的类型id
 
     private Integer lastActivityTypeId;
@@ -31,7 +31,7 @@ public class AuditRequestVo {
 
     private String lastActivityComment;
     // 是否已提交
-  //  private Boolean applied;
+    //  private Boolean applied;
     // 是否可验收, true-可验收, false-不可验收
 
     private Boolean acceptanceEnabled;

@@ -14,11 +14,11 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "Test_user")
-public class User extends BaseEntity<User>{
+public class User extends BaseEntity<User> {
 
     @Column(nullable = true, length = 5)
-    private  String name;
+    private String name;
 
     @Column(nullable = true)
-    private  Integer age;
+    private Integer age;
 }

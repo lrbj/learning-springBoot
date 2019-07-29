@@ -14,10 +14,13 @@ import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.apache.ibatis.jdbc.Null;
+import org.hibernate.validator.cfg.defs.NullDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -63,20 +66,22 @@ public class WorkserviceImpl implements Workservice {
                 .name("工单流程11") //设置部署的名称
                 .category("办公类别11") //设置部署的类别
                 .deploy();
-        System.out.println("部署ID:"+deployment.getId());
-        System.out.println("部署名称"+deployment.getName());
+        System.out.println("部署ID:" + deployment.getId());
+        System.out.println("部署名称" + deployment.getName());
+        TaskVo d = new TaskVo();
+
     }
 
     @Override
-    public void runProcess(String  procsessKey) {
+    public void runProcess(String procsessKey) {
         //String processDefiKey = "ResumeApplyProcess";
 
 
         //获取流程实例
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(procsessKey);
-        System.out.println("流程执行对象的id:"+processInstance.getId());
-        System.out.println("流程实例id:"+processInstance.getProcessInstanceId());//流程实例id
-        System.out.println("流程定义id:"+processInstance.getProcessDefinitionId());//输出流程定义的id
+        System.out.println("流程执行对象的id:" + processInstance.getId());
+        System.out.println("流程实例id:" + processInstance.getProcessInstanceId());//流程实例id
+        System.out.println("流程定义id:" + processInstance.getProcessDefinitionId());//输出流程定义的id
     }
 
     @Override
@@ -85,68 +90,70 @@ public class WorkserviceImpl implements Workservice {
         TaskQuery taskQuery = taskService.createTaskQuery();
         //查看办理人的任务列表
         List<Task> taskList = taskQuery.taskAssignee(assignee).list();
-        if(!taskList.isEmpty()){
-             for(Task task:taskList){
-                 System.out.println("任务办理人："+task.getAssignee());
-                 System.out.println("任务id:" + task.getId());
-                 System.out.println("任务名称："+ task.getName());
-             }
+        if (!taskList.isEmpty()) {
+            for (Task task : taskList) {
+                System.out.println("任务办理人：" + task.getAssignee());
+                System.out.println("任务id:" + task.getId());
+                System.out.println("任务名称：" + task.getName());
+            }
         }
     }
 
     @Override
-    public void complieTask(String taskId,TaskVo data) {
+    public List<HistoricTaskInstance> complieTask(String taskId, TaskVo data) {
 
-        Map<String,Object> var = new HashMap<>();
-        var.put("approvers1",data.getApprovers1());
-        var.put("approvers2",data.getApprovers2());
-        var.put("comment",data.getComment());
-        var.put("result",data.getResult());
-     //   var.put("taskComments", data.getTaskComments());
-       // formService.saveFormData(taskId,var);
+        Map<String, Object> var = new HashMap<>();
+        var.put("approvers1", data.getApprovers1());
+        var.put("approvers2", data.getApprovers2());
+        var.put("comment", data.getComment());
+        var.put("result", data.getResult());
+        //   var.put("taskComments", data.getTaskComments());
+        // formService.saveFormData(taskId,var);
 
-                    //退件-->直接结束流程：只删除运行中的实例，历史实例保存记录
-            Integer result = data.getResult();
-            logger.debug("result:{}", result);
-            if(ApproveResultEnum.REFUSE.getId().equals(result)){
-                HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
-                        .taskId(taskId)
-                        .singleResult();
-                logger.debug("deleteProcessInstance:ProcessInstanceId{}", task.getProcessInstanceId());
-                Map<String, TaskComment> taskComments = (Map<String, TaskComment>) taskService.getTaskComments(taskId);
-                TaskComment taskComment = new TaskComment();
-                taskComment.setAssignee(task.getAssignee());
-                taskComment.setResult(ApproveResultEnum.idOf(result).getCode());
-                taskComment.setComment(data.getComment());
-                taskComments.put(taskId,taskComment);
+        taskService.complete(taskId, var);
 
-                Map<String, Object> variables;
-                variables = taskComments.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> (Object) entry.getValue()));
-                taskService.setVariables(taskId, variables);
-                //taskService.setVariable(taskId,"taskComments", variables);
-                runtimeService.deleteProcessInstance(task.getProcessInstanceId(), data.getComment());
-//                Map<String, TaskComment> taskComments = (Map<String, TaskComment>)task.getProcessVariables().get("taskComments");
-//                Integer result1 = data.getResult();
-//
-//                //添加每个task的审批历史
-//                TaskComment taskComment = new TaskComment();
-//                taskComment.setAssignee(task.getAssignee());
-//                taskComment.setResult(ApproveResultEnum.idOf(result).getCode());
-//                taskComment.setComment(data.getComment());
-//                //add it to map
-//                taskComments.put( taskId, taskComment);
-//                //update taskComments
-                HistoricProcessInstance process = historyService.createHistoricProcessInstanceQuery()
-                        .processInstanceId(task.getProcessInstanceId())
-                        .includeProcessVariables()
-                        .singleResult();
+        System.out.println("当前任务已执行完");
 
-                System.out.println("此时获取的变量信息："+ process.getProcessVariables());
-            }else{
-                taskService.complete(taskId,var);
 
-                System.out.println("当前任务已执行完");
+        //退件-->直接结束流程：只删除运行中的实例，历史实例保存记录
+        Integer result = data.getResult();
+        logger.debug("result:{}", result);
+        if (ApproveResultEnum.REFUSE.getId().equals(result)) {
+            HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
+                    .taskId(taskId)
+                    .singleResult();
+            logger.debug("deleteProcessInstance:ProcessInstanceId{}", task.getProcessInstanceId());
+
+            runtimeService.deleteProcessInstance(task.getProcessInstanceId(), data.getComment());
+
+            HistoricProcessInstance process = historyService.createHistoricProcessInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .includeProcessVariables()
+                    .singleResult();
+
+            System.out.println("此时获取的变量信息：" + process.getProcessVariables());
+
+            List<HistoricTaskInstance> taskInstanceList = historyService.createHistoricTaskInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .taskDeleteReason(data.getComment())
+                    .list();
+            if (!taskInstanceList.isEmpty()) {
+                System.out.println("size" + taskInstanceList.size());
+                for (HistoricTaskInstance historicTaskInstance : taskInstanceList) {
+                    System.out.println("历史流程实例任务id:" + historicTaskInstance.getId());
+                    System.out.println("历史流程定义的id:" + historicTaskInstance.getProcessDefinitionId());
+                    System.out.println("历史流程实例任务名称：" + historicTaskInstance.getName());
+                    System.out.println("历史流程实例任务处理人：" + historicTaskInstance.getAssignee());
+                    System.out.println("历史流程实例任务删除理由：" + historicTaskInstance.getDeleteReason());
+                    historyService.deleteHistoricTaskInstance(historicTaskInstance.getId());
+                }
             }
+            return historyService.createHistoricTaskInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .list();
+        }
+
+        return null;
     }
 
     @Override
@@ -157,13 +164,13 @@ public class WorkserviceImpl implements Workservice {
                 .latestVersion()
                 .orderByProcessDefinitionVersion().desc() //按照版本降序排序
                 .list();
-        if(!processDefinitionList.isEmpty()){
-            for(ProcessDefinition processDefinition: processDefinitionList){
-                System.out.println("流程定义的id:"+ processDefinition.getId());
-                System.out.println("流程定义的Key:"+ processDefinition.getKey());
-                System.out.println("流程定义的版本："+ processDefinition.getVersion());
-                System.out.println("流程定义部署的id:"+ processDefinition.getDeploymentId());
-                System.out.println("流程定义的名称:"+processDefinition.getName());
+        if (!processDefinitionList.isEmpty()) {
+            for (ProcessDefinition processDefinition : processDefinitionList) {
+                System.out.println("流程定义的id:" + processDefinition.getId());
+                System.out.println("流程定义的Key:" + processDefinition.getKey());
+                System.out.println("流程定义的版本：" + processDefinition.getVersion());
+                System.out.println("流程定义部署的id:" + processDefinition.getDeploymentId());
+                System.out.println("流程定义的名称:" + processDefinition.getName());
             }
         }
 
@@ -174,22 +181,21 @@ public class WorkserviceImpl implements Workservice {
         //获取所有流程实例
         List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery()
                 .list();
-        if(!processInstanceList.isEmpty()){
-            for(ProcessInstance processInstance: processInstanceList){
+        if (!processInstanceList.isEmpty()) {
+            for (ProcessInstance processInstance : processInstanceList) {
                 System.out.println("当前正在运行的流程实例");
-                System.out.println("该实例id："+processInstance.getProcessInstanceId());
-                System.out.println("该实例名字："+processInstance.getName());
-                System.out.println("该实例对象id:"+processInstance.getId());
+                System.out.println("该实例id：" + processInstance.getProcessInstanceId());
+                System.out.println("该实例名字：" + processInstance.getName());
+                System.out.println("该实例对象id:" + processInstance.getId());
             }
-        }
-        else {
+        } else {
             System.out.println("当前无流程实例");
         }
     }
 
     @Override
     public void deleteProcessDefi(String deploymentId) {
-       repositoryService.deleteDeployment(deploymentId);
+        repositoryService.deleteDeployment(deploymentId);
     }
 
     @Override
@@ -197,13 +203,14 @@ public class WorkserviceImpl implements Workservice {
         List<HistoricProcessInstance> list = historyService
                 .createHistoricProcessInstanceQuery()
                 .list();
-        if(!list.isEmpty()){
-            for(HistoricProcessInstance temp:list){
+        if (!list.isEmpty()) {
+            for (HistoricProcessInstance temp : list) {
                 System.out.println("历史流程实例id:" + temp.getId());
-                System.out.println("历史流程定义的id:"+ temp.getProcessDefinitionId());
-                System.out.println("历史流程实例开始时间--结束时间:"+ temp.getStartTime() + "-->"+ temp.getEndTime());
+                System.out.println("历史流程定义的id:" + temp.getProcessDefinitionId());
+                System.out.println("历史流程实例开始时间--结束时间:" + temp.getStartTime() + "-->" + temp.getEndTime());
             }
         }
+
 
     }
 
@@ -211,13 +218,18 @@ public class WorkserviceImpl implements Workservice {
     public void queryHistoryTask(String processInstanceId) {
         List<HistoricTaskInstance> taskInstanceList = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(processInstanceId)
+                .taskDeleteReason("111")
                 .list();
-        if(!taskInstanceList.isEmpty()){
-            for(HistoricTaskInstance historicTaskInstance:taskInstanceList){
-                System.out.println("历史流程实例任务id:"+ historicTaskInstance.getId());
-                System.out.println("历史流程定义的id:"+ historicTaskInstance.getProcessDefinitionId());
-                System.out.println("历史流程实例任务名称：" +historicTaskInstance.getName());
-                System.out.println("历史流程实例任务处理人："+historicTaskInstance.getAssignee());
+
+
+        if (!taskInstanceList.isEmpty()) {
+            System.out.println("size" + taskInstanceList.size());
+            for (HistoricTaskInstance historicTaskInstance : taskInstanceList) {
+                System.out.println("历史流程实例任务id:" + historicTaskInstance.getId());
+                System.out.println("历史流程定义的id:" + historicTaskInstance.getProcessDefinitionId());
+                System.out.println("历史流程实例任务名称：" + historicTaskInstance.getName());
+                System.out.println("历史流程实例任务处理人：" + historicTaskInstance.getAssignee());
+                System.out.println("历史流程实例任务删除理由：" + historicTaskInstance.getDeleteReason());
             }
         }
     }

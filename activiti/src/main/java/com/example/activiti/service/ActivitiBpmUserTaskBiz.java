@@ -1,4 +1,5 @@
 package com.example.activiti.service;
+
 ;
 import com.example.activiti.vo.BpmUserTask;
 import com.example.activiti.vo.UserTasksWithInterruptType;
@@ -123,8 +124,6 @@ public class ActivitiBpmUserTaskBiz {
             throw new Exception();
         }
     }
-
-
 
 
     private BpmUserTask convertToBpmUserTask(Task task) {

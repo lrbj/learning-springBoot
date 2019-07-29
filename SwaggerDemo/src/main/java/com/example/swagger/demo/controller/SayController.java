@@ -20,40 +20,38 @@ public class SayController {
 
 
     @GetMapping("/getUserName")
-    @ApiOperation(value="getUserName", notes="根据用户编号获取用户姓名test: 仅1和2有正确返回")
-    @ApiImplicitParam(paramType="query", name = "userNumber",
+    @ApiOperation(value = "getUserName", notes = "根据用户编号获取用户姓名test: 仅1和2有正确返回")
+    @ApiImplicitParam(paramType = "query", name = "userNumber",
             value = "用户编号", required = true,
             dataType = "Integer", example = "1")
-    public String getUserName(@RequestParam(required = true) Integer userNumber){
-        if(userNumber == 1){
+    public String getUserName(@RequestParam(required = true) Integer userNumber) {
+        if (userNumber == 1) {
             return "张三丰";
-        }
-        else if(userNumber == 2){
+        } else if (userNumber == 2) {
             return "慕容复";
-        }
-        else{
+        } else {
             return "未知";
         }
     }
 
 
     @PostMapping("/updatePassword")
-    @ApiOperation(value="updatePassword", notes="修改用户密码,根据用户id修改密码")
+    @ApiOperation(value = "updatePassword", notes = "修改用户密码,根据用户id修改密码")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "userId", value = "用户ID", required = true, dataType = "Integer",example = "111"),
-            @ApiImplicitParam(paramType="query", name = "password", value = "旧密码", required = true, dataType = "String",example = "11111"),
-            @ApiImplicitParam(paramType="query", name = "newPassword", value = "新密码", required = true, dataType = "String",
-                    examples = @Example({@ExampleProperty(value="88888")}))
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "Integer", example = "111"),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "旧密码", required = true, dataType = "String", example = "11111"),
+            @ApiImplicitParam(paramType = "query", name = "newPassword", value = "新密码", required = true, dataType = "String",
+                    examples = @Example({@ExampleProperty(value = "88888")}))
     })
-    public String updatePassword(@RequestParam(value="userId",required = true) Integer userId, @RequestParam(value="password",required = true) String password,
-                                 @RequestParam(value="newPassword",required = true) String newPassword){
-        if(userId <= 0 || userId > 2){
+    public String updatePassword(@RequestParam(value = "userId", required = true) Integer userId, @RequestParam(value = "password", required = true) String password,
+                                 @RequestParam(value = "newPassword", required = true) String newPassword) {
+        if (userId <= 0 || userId > 2) {
             return "未知的用户";
         }
-        if(StringUtils.isEmpty(password) || StringUtils.isEmpty(newPassword)){
+        if (StringUtils.isEmpty(password) || StringUtils.isEmpty(newPassword)) {
             return "密码不能为空";
         }
-        if(password.equals(newPassword)){
+        if (password.equals(newPassword)) {
             return "新旧密码不能相同";
         }
         return "密码修改成功!";
@@ -67,7 +65,7 @@ public class SayController {
             value = "",
             dataTypeClass = Map.class,
             required = true, examples = @Example({@ExampleProperty(value = "{'user:'id''}")}))})
-    public void findPassword(@RequestParam(required = true) Map<String, String> allParams){
+    public void findPassword(@RequestParam(required = true) Map<String, String> allParams) {
 
     }
 

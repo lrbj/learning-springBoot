@@ -16,7 +16,7 @@ public class ReadFileConditon {
 
     private int sheetIndex = 0; //分页id，默认为第一页
 
-    private  String fileName;//预留可用生成的文件的名字
+    private String fileName;//预留可用生成的文件的名字
 
-    private  int  operateType ;//可以根据实际情况进行扩展操作
+    private int operateType;//可以根据实际情况进行扩展操作
 }

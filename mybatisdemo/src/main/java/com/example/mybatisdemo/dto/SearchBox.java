@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class SearchBox {
     // 分页参数
-	private PageParam pageParam;
-	// 窗口查询参数
-	private SearchParam searchParam;
+    private PageParam pageParam;
+    // 窗口查询参数
+    private SearchParam searchParam;
 
 }

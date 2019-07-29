@@ -65,26 +65,25 @@ public class PageUtil {
     }
 
 
-
     //获取导出的excel数据
-    public static ExcelData getexcelData(){
+    public static ExcelData getexcelData() {
         PageSearch pageSearch = PageHolder.getHolder();
         Map<String, Object> pageParameters = pageSearch.getExportParameter();
         String where = "";
         ExcelData data = new ExcelData();
         for (Map.Entry<String, Object> entry : pageParameters.entrySet()) {
-            if(entry.getKey().equals("title")){
-                data.setTitle((List<String>)entry.getValue());
+            if (entry.getKey().equals("title")) {
+                data.setTitle((List<String>) entry.getValue());
             }
 
-            if(entry.getKey().equals("rows")){
-                data.setRows(( List<List<Object>> )entry.getValue());
+            if (entry.getKey().equals("rows")) {
+                data.setRows((List<List<Object>>) entry.getValue());
             }
-            if(entry.getKey().equals("sheetName")){
-                data.setSheetName((String)entry.getValue());
+            if (entry.getKey().equals("sheetName")) {
+                data.setSheetName((String) entry.getValue());
             }
-            if(entry.getKey().equals("fileName")){
-                data.setFileName((String)entry.getValue());
+            if (entry.getKey().equals("fileName")) {
+                data.setFileName((String) entry.getValue());
             }
 
         }

@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface AuditService {
 
-     List<Audit> selectByApplicationId(String applicationId);
+    List<Audit> selectByApplicationId(String applicationId);
 
 
-     int insert(Audit audit);
+    int insert(Audit audit);
 
 
-     int update(Audit audit) ;
+    int update(Audit audit);
 
 
     List<AuditRequestDto> queryAuditRequest(String applicationId, Long applyStartTime, Long applyEndTime,
@@ -27,8 +27,7 @@ public interface AuditService {
                                             Integer lastActivityStatus, Boolean applied);
 
 
+    AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId) throws Exception;
 
-   AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId) throws Exception;
-
-   List<AuditGroupData> queryAuditRequestByGroupAndMonth(Integer month, Integer year);
+    List<AuditGroupData> queryAuditRequestByGroupAndMonth(Integer month, Integer year);
 }

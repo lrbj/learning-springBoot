@@ -48,39 +48,39 @@ public class AuditServiceImpl implements AuditService {
                                                    Integer lastActivityType,
                                                    Integer lastActivityStatus, Boolean applied) {
         return auditMapper.queryAuditRequest(applicationId, Objects.isNull(applyStartTime) ? null : new Timestamp(applyStartTime), Objects.isNull(applyEndTime) ? null : new Timestamp(applyEndTime), applyUserId,
-                 unitParkId, unitBusinessGroupId, unitBusinessDepartmentId,
+                unitParkId, unitBusinessGroupId, unitBusinessDepartmentId,
                 lastActivityType, lastActivityStatus, applied);
     }
 
     @Override
     public AuditRequestDto queryAuditRequestDetailsByApplicationId(String applicationId) throws Exception {
-         if(applicationId == null){
-             try {
-                 return auditMapper.queryAuditRequestDetailsByApplicationId(applicationId);
-             } catch (Exception e) {
-                 e.printStackTrace();
-                 throw  new Exception();
-             }
-         }
+        if (applicationId == null) {
+            try {
+                return auditMapper.queryAuditRequestDetailsByApplicationId(applicationId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new Exception();
+            }
+        }
         return null;
     }
 
     @Override
     public List<AuditGroupData> queryAuditRequestByGroupAndMonth(Integer month, Integer year) {
 
-        String strStartTime = String.format("%d-%02d-01 00:00:00",year,month);
-        Integer endYear = month/12+ year;
-        String strEndTime = String.format("%d-%02d-01 00:00:00", endYear, (month+1)%12);
-        logger.info("strStartTime:"+strStartTime);
+        String strStartTime = String.format("%d-%02d-01 00:00:00", year, month);
+        Integer endYear = month / 12 + year;
+        String strEndTime = String.format("%d-%02d-01 00:00:00", endYear, (month + 1) % 12);
+        logger.info("strStartTime:" + strStartTime);
         logger.info("strEndTime:" + strEndTime);
         Timestamp startTime = Timestamp.valueOf(strStartTime);
         Timestamp endTime = Timestamp.valueOf(strEndTime);
-        logger.info("startTime:"+startTime);
+        logger.info("startTime:" + startTime);
         logger.info("endTime:" + endTime);
-       Timestamp now = new Timestamp(System.currentTimeMillis());
-       //return null;
-        System.out.println(auditMapper.queryAuditRequestByMonth(startTime,endTime,1,2,3,4,5));
-        return (List<AuditGroupData>) auditMapper.queryAuditRequestByGroupAndMonth(startTime,endTime,1,2,3,4,5);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        //return null;
+        System.out.println(auditMapper.queryAuditRequestByMonth(startTime, endTime, 1, 2, 3, 4, 5));
+        return (List<AuditGroupData>) auditMapper.queryAuditRequestByGroupAndMonth(startTime, endTime, 1, 2, 3, 4, 5);
 
     }
 }
