@@ -1,115 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0618976f-de98-4039-b2a1-8b3be3d0b653">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
-	<parameter name="var1" class="java.lang.String"/>
-	<parameter name="var2" class="java.lang.String"/>
-	<queryString>
-		<![CDATA[SELECT * from newtable]]>
-	</queryString>
-	<field name="col1" class="java.lang.String"/>
-	<field name="col2" class="java.lang.String"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band height="79" splitType="Stretch">
-			<staticText>
-				<reportElement x="187" y="44" width="100" height="20" uuid="3b3ba743-014c-432e-b4d0-4f73afe271b6"/>
-				<textElement>
-					<font pdfFontName="STSong-Light" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[题目测试]]></text>
-			</staticText>
-			<line>
-				<reportElement x="0" y="69" width="538" height="1" uuid="bad8e09b-40b8-4964-b87d-5ac872ab0f64"/>
-			</line>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch">
-			<staticText>
-				<reportElement x="199" y="14" width="100" height="20" uuid="7d9a51ec-4025-4204-8421-d9bd598934f1"/>
-				<text><![CDATA[页头]]></text>
-			</staticText>
-			<line>
-				<reportElement x="1" y="27" width="554" height="1" uuid="ba4bf4c2-6d54-404a-9757-404a01198c58"/>
-			</line>
-		</band>
-	</pageHeader>
-	<columnHeader>
-		<band height="61" splitType="Stretch">
-			<staticText>
-				<reportElement x="181" y="22" width="100" height="20" uuid="9b91ebfd-88b8-47d4-b0ef-4aa3861e1488"/>
-				<text><![CDATA[col1]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="323" y="22" width="100" height="20" uuid="3aa00ddf-2ad5-47ec-9367-f2725b22db21"/>
-				<text><![CDATA[col2]]></text>
-			</staticText>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="125" splitType="Stretch">
-			<textField>
-				<reportElement x="181" y="28" width="100" height="20" uuid="962bc395-4c8b-4d2c-80ce-db9c46fb209e"/>
-				<textFieldExpression><![CDATA[$F{col1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="323" y="28" width="100" height="20" uuid="9f51f8ae-fc7e-46a5-8f26-8c80ecf25e6e"/>
-				<textFieldExpression><![CDATA[$F{col2}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="1" y="0" width="554" height="1" uuid="09c82d61-d60a-4c64-b997-90a746885991"/>
-			</line>
-			<line>
-				<reportElement x="1" y="0" width="554" height="1" uuid="bdd73c0d-c1bb-445a-ba72-45e55712555a"/>
-			</line>
-			<line>
-				<reportElement x="1" y="1" width="554" height="1" uuid="ea7a3f8e-bf26-4e02-916d-239f35ea8cae"/>
-			</line>
-			<line>
-				<reportElement x="1" y="124" width="554" height="1" uuid="16d28608-4911-4103-964f-26ead3c14741"/>
-			</line>
-		</band>
-	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch">
-			<staticText>
-				<reportElement x="214" y="24" width="100" height="20" uuid="cda4e6fb-9434-462d-b748-b42868dbcf6b"/>
-				<textElement>
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-				</textElement>
-				<text><![CDATA[列脚区]]></text>
-			</staticText>
-		</band>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch">
-			<staticText>
-				<reportElement x="214" y="34" width="100" height="20" uuid="18ca2546-d9a9-4fd8-ae92-dfe39c3c43b3"/>
-				<text><![CDATA[页脚区]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="153" y="34" width="100" height="20" uuid="dd8021b9-ab9f-4476-a495-33d718659ab5"/>
-				<textFieldExpression><![CDATA[$P{var1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="365" y="31" width="100" height="20" uuid="0f70e3c7-8de4-410f-8500-4cc664952b55"/>
-				<textFieldExpression><![CDATA[$P{var2}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="1" y="0" width="554" height="1" uuid="61fccb42-9bd5-4a47-a31a-b831eb167615"/>
-			</line>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch">
-			<staticText>
-				<reportElement x="214" y="22" width="100" height="20" uuid="c6fdbbd8-6845-4108-ab7f-808964cc0081"/>
-				<text><![CDATA[最后一页]]></text>
-			</staticText>
-		</band>
-	</summary>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="report3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20"
+              rightMargin="20" topMargin="20" bottomMargin="20" uuid="0618976f-de98-4039-b2a1-8b3be3d0b653">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="var1" class="java.lang.String"/>
+    <parameter name="var2" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[SELECT * from newtable]]>
+    </queryString>
+    <field name="col1" class="java.lang.String"/>
+    <field name="col2" class="java.lang.String"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="79" splitType="Stretch">
+            <staticText>
+                <reportElement x="187" y="44" width="100" height="20" uuid="3b3ba743-014c-432e-b4d0-4f73afe271b6"/>
+                <textElement>
+                    <font pdfFontName="STSong-Light" pdfEncoding="Identity-H"/>
+                </textElement>
+                <text><![CDATA[题目测试]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="69" width="538" height="1" uuid="bad8e09b-40b8-4964-b87d-5ac872ab0f64"/>
+            </line>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="35" splitType="Stretch">
+            <staticText>
+                <reportElement x="199" y="14" width="100" height="20" uuid="7d9a51ec-4025-4204-8421-d9bd598934f1"/>
+                <text><![CDATA[页头]]></text>
+            </staticText>
+            <line>
+                <reportElement x="1" y="27" width="554" height="1" uuid="ba4bf4c2-6d54-404a-9757-404a01198c58"/>
+            </line>
+        </band>
+    </pageHeader>
+    <columnHeader>
+        <band height="61" splitType="Stretch">
+            <staticText>
+                <reportElement x="181" y="22" width="100" height="20" uuid="9b91ebfd-88b8-47d4-b0ef-4aa3861e1488"/>
+                <text><![CDATA[col1]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="323" y="22" width="100" height="20" uuid="3aa00ddf-2ad5-47ec-9367-f2725b22db21"/>
+                <text><![CDATA[col2]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="125" splitType="Stretch">
+            <textField>
+                <reportElement x="181" y="28" width="100" height="20" uuid="962bc395-4c8b-4d2c-80ce-db9c46fb209e"/>
+                <textFieldExpression><![CDATA[$F{col1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="323" y="28" width="100" height="20" uuid="9f51f8ae-fc7e-46a5-8f26-8c80ecf25e6e"/>
+                <textFieldExpression><![CDATA[$F{col2}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="1" y="0" width="554" height="1" uuid="09c82d61-d60a-4c64-b997-90a746885991"/>
+            </line>
+            <line>
+                <reportElement x="1" y="0" width="554" height="1" uuid="bdd73c0d-c1bb-445a-ba72-45e55712555a"/>
+            </line>
+            <line>
+                <reportElement x="1" y="1" width="554" height="1" uuid="ea7a3f8e-bf26-4e02-916d-239f35ea8cae"/>
+            </line>
+            <line>
+                <reportElement x="1" y="124" width="554" height="1" uuid="16d28608-4911-4103-964f-26ead3c14741"/>
+            </line>
+        </band>
+    </detail>
+    <columnFooter>
+        <band height="45" splitType="Stretch">
+            <staticText>
+                <reportElement x="214" y="24" width="100" height="20" uuid="cda4e6fb-9434-462d-b748-b42868dbcf6b"/>
+                <textElement>
+                    <font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+                </textElement>
+                <text><![CDATA[列脚区]]></text>
+            </staticText>
+        </band>
+    </columnFooter>
+    <pageFooter>
+        <band height="54" splitType="Stretch">
+            <staticText>
+                <reportElement x="214" y="34" width="100" height="20" uuid="18ca2546-d9a9-4fd8-ae92-dfe39c3c43b3"/>
+                <text><![CDATA[页脚区]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="153" y="34" width="100" height="20" uuid="dd8021b9-ab9f-4476-a495-33d718659ab5"/>
+                <textFieldExpression><![CDATA[$P{var1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="365" y="31" width="100" height="20" uuid="0f70e3c7-8de4-410f-8500-4cc664952b55"/>
+                <textFieldExpression><![CDATA[$P{var2}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="1" y="0" width="554" height="1" uuid="61fccb42-9bd5-4a47-a31a-b831eb167615"/>
+            </line>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="42" splitType="Stretch">
+            <staticText>
+                <reportElement x="214" y="22" width="100" height="20" uuid="c6fdbbd8-6845-4108-ab7f-808964cc0081"/>
+                <text><![CDATA[最后一页]]></text>
+            </staticText>
+        </band>
+    </summary>
 </jasperReport>
