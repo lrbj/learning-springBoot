@@ -22,15 +22,32 @@ public class EnvInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     Env env = EnvHolder.getHolder();
-      String authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbnMiOlswLDEsMiwzXSwiY2xpZW50SVAiOiIiLCJkZXZpY2VUeXBlIjowLCJkb21haW4iOiIiLCJleHAiOjE1OTQwMjMyODYsImdyb3VwSURzIjoiIiwiaWF0IjoxNTk0MDE2MDg2LCJpZCI6IjM5M0U3QzNELTBBMzEtNDBDRC1BNTY3LUVFNURGRThBQjQ5MSIsImxvY2F0aW9uSURzIjoiIiwibW9iaWxlQWNjZXNzIjpbMCwxLDIsM10sInJlc291cmNlIjozLCJ0ZW5hbnRJRHMiOiItMSIsInVzZXJOYW1lIjoiYWRtaW4ifQ.m21jkg96-tKo_BS7niJxXUstKBe-so-BLImUdDF_W2o";
-      String essSystem = "3";
-      String userid = "zlt1";
-      String tenantIdsStr = "1";
-//    env.setJwtToken(request.getHeader("authorization"));
-//    env.setEssSystem(Integer.parseInt(request.getHeader("ess-system")));
-//    env.setUserid(userid);
-    env.setJwtToken(authorization);
-    env.setEssSystem(Integer.parseInt(essSystem));
+
+    String authorization = request.getHeader("authorization");
+    String essSystem = request.getHeader("ess-system");
+    String userid = request.getHeader("userid");
+    String tenantIdsStr = request.getHeader("tenantids");
+    if (authorization == null) {
+      response.setContentType("application/json;charset=utf-8");
+      ResponseObject resObj = new ResponseObject<>(ErrorEnum.MISS_HEADER.getCode(), "请求头缺失：authorization", null);
+      response.getWriter().write(JSON.toJSONString(resObj));
+      return false;
+    }
+    if (essSystem == null) {
+      response.setContentType("application/json;charset=utf-8");
+      ResponseObject resObj = new ResponseObject<>(ErrorEnum.MISS_HEADER.getCode(), "请求头缺失：ess-system", null);
+      response.getWriter().write(JSON.toJSONString(resObj));
+      return false;
+    }
+    if (tenantIdsStr == null) {
+      response.setContentType("application/json;charset=utf-8");
+      ResponseObject resObj = new ResponseObject<>(ErrorEnum.MISS_HEADER.getCode(), "请求头缺失：tenantids", null);
+      response.getWriter().write(JSON.toJSONString(resObj));
+      return false;
+    }
+
+    env.setJwtToken(request.getHeader("authorization"));
+    env.setEssSystem(Integer.parseInt(request.getHeader("ess-system")));
     env.setUserid(userid);
     String tenantId = "";
     Set<String> tenantIds = new HashSet<>();

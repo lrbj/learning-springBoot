@@ -15,8 +15,6 @@ public class Env {
 
   /**
    * 系统编号
-   * 2 - 维保
-   * 3 - 点检
    */
   private Integer essSystem;
 

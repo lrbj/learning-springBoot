@@ -22,7 +22,7 @@ public class WebInterceptorConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(pageInterceptor()).addPathPatterns("/**").order(1);
-    registry.addInterceptor(envInterceptor()).addPathPatterns("/**").order(2);
+//    registry.addInterceptor(pageInterceptor()).addPathPatterns("/**").order(1);
+//    registry.addInterceptor(envInterceptor()).addPathPatterns("/**").order(2);
   }
 }

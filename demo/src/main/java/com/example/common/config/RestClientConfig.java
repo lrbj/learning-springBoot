@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
+/**
+ * restemplate 请求拦截器
+ */
 
 @Configuration
 @Slf4j

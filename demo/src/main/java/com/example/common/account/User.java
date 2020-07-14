@@ -17,10 +17,10 @@ public class User {
   // 角色信息，key: roleId, value: roleName
   private Map<String, String> roleInfo;
 
-  public boolean isPollingAdmin() {
+  public boolean isAdmin() {
     if (this.roleInfo != null) {
       for (Map.Entry<String, String> role : roleInfo.entrySet()) {
-        if ("SuperAdmin".equals(role.getValue()) || role.getValue().contains("超级点检员")) {
+        if ("SuperAdmin".equals(role.getValue()) || role.getValue().contains("超级")) {
           return true;
         }
       }
@@ -29,15 +29,5 @@ public class User {
     return false;
   }
 
-  public boolean isMaintenanceAdmin() {
-    if (this.roleInfo != null) {
-      for (Map.Entry<String, String> role : roleInfo.entrySet()) {
-        if ("SuperAdmin".equals(role.getValue()) || role.getValue().contains("超级维保员")) {
-          return true;
-        }
-      }
-    }
 
-    return false;
-  }
 }

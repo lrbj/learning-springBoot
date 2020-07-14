@@ -18,61 +18,7 @@
         <java.version>1.8</java.version>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <REDIS_PORT>30999</REDIS_PORT>
-                <REDIS_ADDRESS>10.78.112.120</REDIS_ADDRESS>
-                <REDIS_KEY_PREFIX>fire-foxconn-local</REDIS_KEY_PREFIX>
-
-
-                <MQTT_OUTBOUND_ADDRESS>tcp://10.78.112.120:30641</MQTT_OUTBOUND_ADDRESS>
-                <MQTT_INBOUND_ADDRESS>tcp://10.78.112.120:30641</MQTT_INBOUND_ADDRESS>
-
-
-                <PG_ADDRESS>jdbc:postgresql://10.78.112.120:31863/common_foxconn_back</PG_ADDRESS>
-                <PG_USERNAME>common</PG_USERNAME>
-                <PG_PASSWORD>common</PG_PASSWORD>
-                <MONGODB_ADDRESS>mongodb://10.78.112.120:32463/common-foxconn</MONGODB_ADDRESS>
-
-                <SWAGGER_ENABLE>true</SWAGGER_ENABLE>
-                <SSO_URL>http://10.78.112.120:31575</SSO_URL>
-                <SSO_ENABLE>true</SSO_ENABLE>
-
-                <MODBUS_OPEN>false</MODBUS_OPEN>
-                <WATER_OPEN>false</WATER_OPEN>
-
-                <FILE_PATH>./contractdata/</FILE_PATH>
-
-                <MQ_TYPE>nats</MQ_TYPE>
-                <MQ_PROC_ID>polling-msg</MQ_PROC_ID>
-                <NATS_CLIENT_ID>polling-NotifyListener</NATS_CLIENT_ID>
-                <NATS_CLUSTER_ID>polling-notify</NATS_CLUSTER_ID>
-                <NATS_SERVER>nats://10.78.112.120:31434</NATS_SERVER>
-
-                <RABBITMQ_HOST>10.78.112.120</RABBITMQ_HOST>
-                <RABBITMQ_PORT>30267</RABBITMQ_PORT>
-
-            </properties>
-
-        </profile>
-    </profiles>
-
-
     <dependencies>
-
-        <!-- SpringWebSocket依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.qcloudsms</groupId>
-            <artifactId>qcloudsms</artifactId>
-            <version>1.0.6</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -80,6 +26,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 排除默认的logback日志，使用log4j-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -142,24 +99,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-        <!--emq-->
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-integration</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-stream</artifactId>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.integration</groupId>-->
-        <!--<artifactId>spring-integration-mqtt</artifactId>-->
-        <!--</dependency>-->
+
 
         <!--rabbitmq-->
         <dependency>
@@ -202,39 +142,15 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <!--websocket-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-websocket</artifactId>-->
+        <!--</dependency>-->
         <!--quartz-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.16.Final</version>
-        </dependency>
-
-        <!--activiti-->
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-basic</artifactId>
-            <version>6.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>activation</artifactId>
-                    <groupId>javax.activation</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-quartz</artifactId>-->
+        <!--</dependency>-->
         <!--postgresql-->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -252,13 +168,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <!-- ModbusTcp -->
-        <dependency>
-            <groupId>net.wimpi</groupId>
-            <artifactId>jamod</artifactId>
-            <version>1.2</version>
         </dependency>
 
         <!-- excel -->
@@ -300,11 +209,11 @@
         <!--<artifactId>jasperreports</artifactId>-->
         <!--<version>5.6.0</version>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.2.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.codehaus.groovy</groupId>-->
+            <!--<artifactId>groovy-all</artifactId>-->
+            <!--<version>2.2.2</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>simsun.jar</groupId>
             <artifactId>simsun</artifactId>
@@ -312,12 +221,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/simsun.jar</systemPath>
         </dependency>
-        <!-- nats -->
-        <dependency>
-            <groupId>io.nats</groupId>
-            <artifactId>jnats</artifactId>
-            <version>2.4.1</version>
-        </dependency>
+        <!--&lt;!&ndash; nats &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>io.nats</groupId>-->
+            <!--<artifactId>jnats</artifactId>-->
+            <!--<version>2.4.1</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>io.nats</groupId>
@@ -331,31 +240,18 @@
             <version>3.1</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+        <groupId>com.github.qcloudsms</groupId>
+        <artifactId>qcloudsms</artifactId>
+        <version>1.0.6</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.0.17.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.0.17.Final</version>
         </dependency>
     </dependencies>
 

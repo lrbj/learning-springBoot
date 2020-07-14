@@ -19,11 +19,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author: Kayla, Ye
- * @Description:
- * @Date:Created in 2:58 PM 6/10/2020
- */
+
 @Service
 public class FileService {
     @Autowired

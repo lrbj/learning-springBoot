@@ -2,7 +2,6 @@ package com.example.common.config;
 
 
 import com.example.common.account.UserService;
-import org.quartz.Scheduler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -30,14 +29,6 @@ public class BeanProvider implements ApplicationContextAware {
         UserService.class);
     return userService;
   }
-
-  public static Scheduler getScheduler() {
-    Scheduler scheduler = null;
-    scheduler = getApplicationContext().getBean(
-        Scheduler.class);
-    return scheduler;
-  }
-
 
   public static <T> T getBean(Class<T> beanClass) {
     T bean = getApplicationContext().getBean(beanClass);

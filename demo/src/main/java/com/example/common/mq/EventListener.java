@@ -17,7 +17,7 @@ public class EventListener {
   @Autowired
   RabbitmqProps rabbitmqProps;
 
-  @RabbitListener(queues = "event-data")
+  //@RabbitListener(queues = "event-data")
   public void EventListener(Message message) {
      System.out.println("listener");
   }

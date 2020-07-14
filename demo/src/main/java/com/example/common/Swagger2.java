@@ -31,8 +31,8 @@ public class Swagger2 {
                 .apiInfo(apiInfo())
                 .select()
                 //API 接口位置
-//                .apis(RequestHandlerSelectors.basePackage("com.example.common.controller"))
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.example.common.controller"))
+                //.apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
     }

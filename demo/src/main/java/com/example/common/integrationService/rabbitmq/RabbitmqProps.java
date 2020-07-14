@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "rabbitmq")
 @Component
 public class RabbitmqProps {
-    private String fireExchange;
-    private String faultQueue;
     private String locationQueue;
     private String LocationExchange;
     private String mailExchange;
