@@ -4,6 +4,7 @@ import com.example.ssldemo.common.DataInitRunner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,7 +28,15 @@ public class RestClientConfig {
 
     // 通用请求拦截器
     restTemplate.setInterceptors(Arrays.asList((request, body, execution) -> {
-      request.getHeaders().add("auth_token",DataInitRunner.jwtToken);
+        request.getHeaders().add("authorization","wqqqeqwe");
+
+         request.getHeaders().add("ess-system", "2");
+
+        request.getHeaders().add("content-type", MediaType.APPLICATION_JSON_VALUE);
+        request.getHeaders().add("userid", "H222");
+        request.getHeaders().add("tenantids", "-1");
+      request.getHeaders().add("auth-token",DataInitRunner.jwtToken);
+      request.getHeaders().add("tenantids", "-1");
       System.out.println("local jwtoken"+DataInitRunner.jwtToken);
 //      log.info("restTemplate request header: {}", JSON.toJSON(request.getHeaders().toSingleValueMap()));
       return execution.execute(request, body);

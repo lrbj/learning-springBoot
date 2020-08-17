@@ -44,10 +44,9 @@ public class JwtTokenUtil {
     /**
      * 创建jwt
      */
-    public static String createJWT(String id, String issuer, String subject, long ttlMillis, Map<String, Object> claims) throws Exception {
+    public static String createJWT(String id, String issuer, SignatureAlgorithm signatureAlgorithm, long ttlMillis, Map<String, Object> claims) throws Exception {
 
         // 指定签名的时候使用的签名算法，也就是header那部分，jjwt已经将这部分内容封装好了。
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         // 生成JWT的时间
         long nowMillis = System.currentTimeMillis();
@@ -90,6 +89,12 @@ public class JwtTokenUtil {
 
     public static String generalPrivateKey(){
        return null;
+    }
+
+
+    // boolean
+    public static boolean verify(String token){
+        return true;
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.activiti.service.impl;
 
 import com.example.activiti.service.Workservice;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +58,13 @@ public class WorkserviceImplTest {
     }
 
     @Test
-    public void queryHistoryTask() {
-        String id = "10003";
-        workservice.queryHistoryTask(id);
+    public void queryHistoryTask() throws JSONException {
+//        String id = "10003";
+//        workservice.queryHistoryTask(id);
+        String str = "{\"comments\":\"123\",\"photos\":[],\"operator\":\" 作业人：1231 工号：123 邮箱：123 备注：123\"}";
+        JSONObject jsonObject = new JSONObject(str);
+        if (!jsonObject.isNull("comments")) {
+            System.out.println("comments" + jsonObject.getString("comments"));
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.example.ssldemo.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @Author: Kayla, Ye
  * @Description:
@@ -9,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class JwtTokenDto {
-    public JwtTokenDto(String type, String[] scopes, String metadata, long exp, String sub) {
+    public JwtTokenDto(String type, List<String> scopes, String metadata, long exp, String sub) {
         this.type = type;
         this.scopes = scopes;
         this.metadata = metadata;
@@ -18,7 +20,7 @@ public class JwtTokenDto {
     }
 
     private  String type;
-    private  String[] scopes;
+    private  List<String> scopes;
     private  String metadata;
     private  long exp;
     private  String sub;
