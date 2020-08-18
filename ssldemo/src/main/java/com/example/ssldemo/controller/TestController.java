@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.PublicKey;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,8 +65,12 @@ public class TestController {
 
     @GetMapping("/key")
     @ApiOperation("key")
-    public void getKey(){
-        sslServer.getKey();
+    public Object getKey(){
+       PublicKey publicKey =  sslServer.getPublicKeyFromPem();
+       if(publicKey != null){
+            return publicKey.getEncoded().toString();
+       }
+       return  null;
     }
 
 

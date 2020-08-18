@@ -18,6 +18,7 @@ public class JwtTokenDto {
         this.exp = exp;
         this.sub = sub;
     }
+    public JwtTokenDto(){}
 
     private  String type;
     private  List<String> scopes;

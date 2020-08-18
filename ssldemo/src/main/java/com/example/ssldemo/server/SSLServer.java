@@ -6,17 +6,29 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.bouncycastle.asn1.ASN1Object;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import sun.misc.BASE64Decoder;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -40,11 +52,18 @@ public class SSLServer {
 
     @Value("${cert.holder}")
     private String certHolder;
+    @Value("${ssl.token.publickey.path}")
+    private String publickeyPath;
+
+    private String privateKeyPath = "D:/token/token-key.pem";
 
     public static final String JWT_SECRET = "onyx";
     public static final int JWT_TTL = 60 * 60 * 1000;  //millisecond
     public static  final String CURRENT_SER = "demo";
+    private static  final String SUFFIX_PFX = ".pfx";
+    private static final String SUFFIX_PEM = ".pem";
 
+    /**提取pfx文件中的公钥和私钥*/
     private KeyStore getKeyStore(){
         KeyStore ks = null;
         try {
@@ -96,7 +115,7 @@ public class SSLServer {
         return keyAlias;
     }
 
-    public PublicKey getPubkey(){
+    public PublicKey getPublicKeyFromPfx(){
         KeyStore ks = getKeyStore();
         if(null == ks ){
             return null;
@@ -111,7 +130,7 @@ public class SSLServer {
         return cert.getPublicKey();
     }
 
-    public  PrivateKey getPrikey(){
+    public  PrivateKey getPrivateKeyFromPfx(){
         KeyStore ks = getKeyStore();
         if(null == ks ){
             return null;
@@ -132,7 +151,7 @@ public class SSLServer {
         return  prikey;
     }
 
-    public   void getKey()  {
+    public   void getKeyFormPfx()  {
         KeyStore ks = null;
         try {
             ks = KeyStore.getInstance(keystoreType);
@@ -194,8 +213,87 @@ public class SSLServer {
         }
     }
 
+    public  PrivateKey getPrivateKeyFromPem() {
+        BufferedReader br = null;
+        PrivateKey privateKey = null;
+        try {
+            br = new BufferedReader(new FileReader(privateKeyPath));
 
+            String s = br.readLine();
+            StringBuilder str = new StringBuilder();
+            s = br.readLine();
+            while (s.charAt(0) != '-') {
+                str.append(s);
+                s = br.readLine();
+            }
+            String pkcs8Str = formatPkcs1ToPkcs8(str.toString());
+            BASE64Decoder base64decoder = new BASE64Decoder();
+            byte[] decoded = base64decoder.decodeBuffer(pkcs8Str);
+            // 生成私匙
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decoded);
+            privateKey = kf.generatePrivate(keySpec);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return privateKey;
+    }
 
+    public  PublicKey getPublicKeyFromPem() {
+        StringBuilder str = new StringBuilder();
+        PublicKey pubKey = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(publickeyPath));
+            String s = br.readLine();
+            s = br.readLine();
+            while (s.charAt(0) != '-') {
+                str.append(s);
+                s = br.readLine();
+            }
+            BASE64Decoder base64decoder = new BASE64Decoder();
+            byte[] decoded = base64decoder.decodeBuffer(str.toString());
+            X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X.509")
+                    .generateCertificate(new ByteArrayInputStream(decoded));
+            pubKey = certificate.getPublicKey();
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }  catch (CertificateException e) {
+            e.printStackTrace();
+        }
+
+        return pubKey;
+    }
+
+    /**
+     *     Pkcs1toPkcs8
+     */
+    public  String formatPkcs1ToPkcs8(String rawKey) throws Exception {
+        String result = null;
+        //extract valid key content
+        String validKey = rawKey;//RsaPemUtil.extractFromPem(rawKey); // pem文件多行合并为一行
+        if (!StringUtils.isEmpty(validKey))
+        {
+            //将BASE64编码的私钥字符串进行解码
+            byte[] encodeByte = Base64.decodeBase64(validKey);
+
+            AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(PKCSObjectIdentifiers.pkcs8ShroudedKeyBag);    //PKCSObjectIdentifiers.pkcs8ShroudedKeyBag
+//            ASN1Object asn1Object = ASN1Object.fromByteArray(encodeByte);
+            ASN1Object asn1Object = ASN1ObjectIdentifier.fromByteArray(encodeByte);
+            PrivateKeyInfo privKeyInfo = new PrivateKeyInfo(algorithmIdentifier, asn1Object);
+            byte[] pkcs8Bytes = privKeyInfo.getEncoded();
+            return Base64.encodeBase64String(pkcs8Bytes); // 直接一行字符串输出
+
+        }
+        return result;
+    }
 
     /**
      * 由字符串生成加密key
@@ -205,11 +303,13 @@ public class SSLServer {
     public  Key generalKey(SignatureAlgorithm signatureAlgorithm,Boolean isEncrypt ) {
         if(signatureAlgorithm.equals(SignatureAlgorithm.RS256)){
             if(isEncrypt){
-                PrivateKey prikey = getPrikey();
+//                PrivateKey prikey = getPrikey();
+                PrivateKey prikey = getPrivateKey();
                 System.out.println("priv+"+Base64.encodeBase64(prikey.getEncoded()));
                 return prikey;
             }else{
-                PublicKey pubkey = getPubkey();
+          //      PublicKey pubkey = getPubkey();
+                PublicKey pubkey = getPublicKey();
                 System.out.println("publc+"+Base64.encodeBase64(pubkey.getEncoded()));
               return pubkey;
             }
@@ -222,6 +322,32 @@ public class SSLServer {
         return key;
     }
 
+    private PublicKey getPublicKey() {
+        int dd = publickeyPath.lastIndexOf(".");
+       String suffix = publickeyPath.substring(publickeyPath.lastIndexOf("."));
+       if(suffix.equals(SUFFIX_PEM)){
+           return getPublicKeyFromPem();
+       }
+       if(suffix.equals(SUFFIX_PFX)){
+           return getPublicKeyFromPfx();
+       }
+       return null;
+    }
+
+    private PrivateKey getPrivateKey() {
+        int dd = privateKeyPath.lastIndexOf(".");
+        String suffix = privateKeyPath.substring(privateKeyPath.lastIndexOf("."));
+        if(suffix.equals(SUFFIX_PEM)){
+            return getPrivateKeyFromPem();
+        }
+        if(suffix.equals(SUFFIX_PFX)){
+            return getPrivateKeyFromPfx();
+        }
+        return null;
+
+    }
+
+    
 
     /**
      * 创建jwt
