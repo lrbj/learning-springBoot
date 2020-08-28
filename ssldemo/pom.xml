@@ -80,6 +80,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -140,38 +144,38 @@
                 </nonFilteredFileExtensions>
             </configuration>
         </plugin>
-        <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.8</version>
-            <configuration>
-                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                <output>file</output>
-                <append>true</append>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>pre-unit-test</id>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                    <configuration>
-                        <propertyName>surefireArgLine</propertyName>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>post-unit-test</id>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+        <!--<plugin>-->
+            <!--<groupId>org.jacoco</groupId>-->
+            <!--<artifactId>jacoco-maven-plugin</artifactId>-->
+            <!--<version>0.7.8</version>-->
+            <!--<configuration>-->
+                <!--<destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>-->
+                <!--<dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>-->
+                <!--<output>file</output>-->
+                <!--<append>true</append>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+                <!--<execution>-->
+                    <!--<id>pre-unit-test</id>-->
+                    <!--<goals>-->
+                        <!--<goal>prepare-agent</goal>-->
+                    <!--</goals>-->
+                    <!--<configuration>-->
+                        <!--<propertyName>surefireArgLine</propertyName>-->
+                    <!--</configuration>-->
+                <!--</execution>-->
+                <!--<execution>-->
+                    <!--<id>post-unit-test</id>-->
+                    <!--<phase>test</phase>-->
+                    <!--<goals>-->
+                        <!--<goal>report</goal>-->
+                    <!--</goals>-->
+                    <!--<configuration>-->
+                        <!--<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>-->
+                    <!--</configuration>-->
+                <!--</execution>-->
+            <!--</executions>-->
+        <!--</plugin>-->
     </plugins>
 </build>
 

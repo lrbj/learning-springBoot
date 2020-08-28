@@ -2,6 +2,7 @@ package com.example.ssldemo.config;
 
 import com.example.ssldemo.common.DataInitRunner;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -17,11 +18,11 @@ import java.util.Arrays;
 @Configuration
 @Slf4j
 public class RestClientConfig {
+    @Autowired
+    HttpsClientRequestFactory requestFactory;
   @Bean
   public RestTemplate restTemplate() {
     RestTemplate restTemplate = new RestTemplate();
-
-    SimpleClientHttpRequestFactory requestFactory = new HttpsClientRequestFactory();
     requestFactory.setConnectTimeout(3000);
     requestFactory.setReadTimeout(3000);
     restTemplate.setRequestFactory(requestFactory);
