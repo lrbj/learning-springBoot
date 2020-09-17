@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
@@ -62,7 +63,7 @@ public class WorkserviceImpl implements Workservice {
 
         //部署流程
         Deployment deployment = repositoryService.createDeployment() //创建一个部署的构造器
-                .addClasspathResource("processes/interruptApplyProcess.bpmn") //从类路径中添加资源
+                .addClasspathResource("processes/ResumeApplyProcess.bpmn") //从类路径中添加资源
                 .name("工单流程11") //设置部署的名称
                 .category("办公类别11") //设置部署的类别
                 .deploy();
@@ -123,16 +124,23 @@ public class WorkserviceImpl implements Workservice {
                     .taskId(taskId)
                     .singleResult();
             logger.debug("deleteProcessInstance:ProcessInstanceId{}", task.getProcessInstanceId());
-
-            runtimeService.deleteProcessInstance(task.getProcessInstanceId(), data.getComment());
-
-            HistoricProcessInstance process = historyService.createHistoricProcessInstanceQuery()
+            ProcessInstance processInstance1 = runtimeService.createProcessInstanceQuery().
+                    processInstanceId(task.getProcessInstanceId()).
+                    singleResult();
+            if (null == processInstance1) {
+                System.out.println("该实例不在运行列表中");
+                return null;
+            }
+            HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .includeProcessVariables()
                     .singleResult();
+            System.out.println("该实例id：" + processInstance.getProcessDefinitionId());
+            System.out.println("该实例名字：" + processInstance.getName());
+            System.out.println("该实例对象id:" + processInstance.getId());
+            System.out.println("此时获取的变量信息：" + processInstance.getProcessVariables());
 
-            System.out.println("此时获取的变量信息：" + process.getProcessVariables());
-
+            runtimeService.deleteProcessInstance(task.getProcessInstanceId(), data.getComment());
             List<HistoricTaskInstance> taskInstanceList = historyService.createHistoricTaskInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .taskDeleteReason(data.getComment())
@@ -218,7 +226,6 @@ public class WorkserviceImpl implements Workservice {
     public void queryHistoryTask(String processInstanceId) {
         List<HistoricTaskInstance> taskInstanceList = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(processInstanceId)
-                .taskDeleteReason("111")
                 .list();
 
 
@@ -230,6 +237,9 @@ public class WorkserviceImpl implements Workservice {
                 System.out.println("历史流程实例任务名称：" + historicTaskInstance.getName());
                 System.out.println("历史流程实例任务处理人：" + historicTaskInstance.getAssignee());
                 System.out.println("历史流程实例任务删除理由：" + historicTaskInstance.getDeleteReason());
+                System.out.println("历史任务的开始时间：" + historicTaskInstance.getStartTime() + "对应的时间戳" + historicTaskInstance.getStartTime().getTime());
+                Long time = Objects.isNull(historicTaskInstance.getEndTime()) ? null : historicTaskInstance.getEndTime().getTime();
+                System.out.println("历史任务的结束时间：" + historicTaskInstance.getEndTime() + "对应时间戳" + time);
             }
         }
     }

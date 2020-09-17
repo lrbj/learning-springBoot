@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Honeywell, Inc. All Rights Reserved.
+ * Copyright (C) 2019 example, Inc. All Rights Reserved.
  */
 package com.example.mybatisdemo.model;
 

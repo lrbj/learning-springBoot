@@ -45,7 +45,7 @@ public class Swagger2 {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("fireiot-user项目RESTful APIs")
+                .title("common-user项目RESTful APIs")
                 .description("接口描述")
                 .termsOfServiceUrl("http://www.baidu.com")
                 //.contact("sunf")

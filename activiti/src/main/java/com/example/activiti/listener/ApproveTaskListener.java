@@ -39,12 +39,12 @@ public class ApproveTaskListener implements TaskListener {
         //3.根据审批结果做处理
         if (ApproveResultEnum.REFUSE.getId().equals(result)) { //退件-->直接结束流程：只删除运行中的实例，历史实例保存记录
             //this.runtimeService.deleteProcessInstance( delegateTask.getProcessInstanceId(), (String)delegateTask.getVariable("comment"));
-            this.runtimeService.suspendProcessInstanceById(delegateTask.getProcessInstanceId());
-            logger.info(" notify(DelegateTask delegateTask): refuse");
-            int rejectedCnt = (int) delegateTask.getVariable("rejected");
+//            this.runtimeService.suspendProcessInstanceById(delegateTask.getProcessInstanceId());
+//            logger.info(" notify(DelegateTask delegateTask): refuse");
+//            int rejectedCnt = (int) delegateTask.getVariable("rejected");
 //
 //            delegateTask.setVariable("rejected", --rejectedCnt);
-            logger.info(" notify(DelegateTask delegateTask): rejectedCnt:{}", rejectedCnt);
+//            logger.info(" notify(DelegateTask delegateTask): rejectedCnt:{}", rejectedCnt);
 
         } else if (ApproveResultEnum.RETURN.getId().equals(result)) { //回退
             int rejectedCnt = (int) delegateTask.getVariable("rejected");

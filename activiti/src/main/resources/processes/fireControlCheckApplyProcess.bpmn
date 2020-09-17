@@ -38,7 +38,7 @@
     <sequenceFlow id="_14" sourceRef="start" targetRef="applyTask"/>
     <sequenceFlow id="_15" name="reset" sourceRef="applyTask" targetRef="approveTask1">
       <extensionElements>
-        <activiti:executionListener class="com.honeywell.foxconn.bpm.core.listener.ProcessInstanceListener" event="end"/>
+        <activiti:executionListener class="com.example.foxconn.bpm.core.listener.ProcessInstanceListener" event="end"/>
       </extensionElements>
     </sequenceFlow>
     <sequenceFlow id="_16" sourceRef="approveTask1" targetRef="_6"/>
@@ -71,7 +71,7 @@
     </sequenceFlow>
     <sequenceFlow id="_30" name="reset" sourceRef="reapplyTask" targetRef="approveTask1">
       <extensionElements>
-        <activiti:executionListener class="com.honeywell.foxconn.bpm.core.listener.ProcessInstanceListener" event="end"/>
+        <activiti:executionListener class="com.example.foxconn.bpm.core.listener.ProcessInstanceListener" event="end"/>
       </extensionElements>
     </sequenceFlow>
   </process>

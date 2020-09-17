@@ -4,6 +4,10 @@ import com.example.activiti.service.Workservice;
 import com.example.activiti.vo.TaskVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.task.Task;
+import org.hibernate.validator.constraints.EAN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 
@@ -28,6 +33,9 @@ public class testController {
     private static Logger logger = LoggerFactory.getLogger(testController.class);
     @Autowired
     Workservice workservice;
+
+    @Autowired
+    TaskService taskService;
 
 
     @PostMapping(value = "/deployments", consumes = "multipart/form-data", produces = "application/json;charset=utf-8")
@@ -96,4 +104,19 @@ public class testController {
         workservice.deleteProcessInstance(processInstanceId, deleteReason);
     }
 
+    @PostMapping("/test")
+    @ApiOperation(value = "test")
+    void test(@RequestParam("taskId") String taskId) {
+        // 查找代办理任务
+        List<Task> taskList = taskService.createTaskQuery().taskId(taskId).list();
+        if (!taskList.isEmpty()) {
+            for (Task task : taskList) {
+                System.out.println("任务办理人：" + task.getAssignee());
+                System.out.println("任务id:" + task.getId());
+                System.out.println("任务名称：" + task.getName());
+                System.out.println("对应流程：" + task.getProcessInstanceId());
+            }
+        }
+
+    }
 }
